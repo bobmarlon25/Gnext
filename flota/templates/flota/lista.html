@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles de la Ambulancia y Registro de Tanqueo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h2 {
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .img-container {
+            max-width: 200px;
+            max-height: 200px;
+        }
+        .img-container img {
+            width: 100%;
+            height: auto;
+        }
+    </style> 
+
+</head>
+<body>
+    <h2>Detalles de la Ambulancia y Registro de Tanqueo</h2>
+    <table>
+        <tr>
+            <th colspan="2">Detalles de la Ambulancia</th>
+        </tr>
+        <tr>
+            <th>{{ ambulancia.movil }}</th>
+            <td>{{ ambulancia.placa }}</td>
+        </tr>
+        <tr>
+            <th>Foto Lateral</th>
+            <td class="img-container"><img src="{{ ambulancia.lateral.path }}" alt="Foto Lateral"></td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <th colspan="2">Detalles del Registro de Tanqueo</th>
+        </tr>
+        <tr>
+            <th>Fecha de Registro</th>
+            <td>{{ registro.autor.first_name }}</td>
+        </tr>
+        <tr>
+            <th>Hora de Registro</th>
+            <td>{{ registro.hora_registro }}</td>
+        </tr>
+        <tr>
+            <th>Kilometraje del Movil</th>
+            <td>{{ registro.kilometraje }}</td>
+        </tr>
+        <tr>
+            <th>Remicion</th>
+            <td>{{ registro.remicion }}</td>
+        </tr>
+        <tr>
+            <th>Firma</th>
+            <td>{{ registro.firma }}</td>
+        </tr>
+        <tr>
+            <th>Foto</th>
+            <td class="img-container"><img src="{{ registro.foto.url }}" alt="Foto del Registro"></td>
+        </tr>
+    </table>
+</body>
+</html>

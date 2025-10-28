@@ -1,0 +1,723 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Umedica</title>
+    <!-- Enlaza el favicon -->
+    <link rel="icon" href="https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/4a3871b1-5e96-429f-8046-85bdb422b44e.image.png?v=1708646250765" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap" rel="stylesheet">
+
+  <!--  <link rel="stylesheet" href="{% static 'styles/index.css' %}" />-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+
+    <style>
+  .navbar {
+   font-family: 'Signika Negative', sans-serif;
+        background-image: url('https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/abstract-luxury-gradient-blue-background-smooth-dark-blue-with-black-vignette-studio-banner.jpg?v=1712618457076'); /* Ruta de tu imagen */
+    background-size: cover; /* Ajusta el tamaño de la imagen para cubrir completamente el contenedor */
+
+      }
+     /* ajuste de tamaño de kilometraje soat */
+     .last-blogs_item .most-read-blog_title  {
+  font-size: 16px; /* Ajusta el tamaño del texto según lo necesites */
+}
+.blog-card-stats__item{font-size: 12px;}
+.ambulancia-info {
+  margin-top:20px;
+
+}
+
+/* Container styles */
+.last-blogs {
+        padding: 20px;
+        background-color: rgba(247, 247, 247, 0);
+        border-radius: 10px;
+        background-attachment: fixed;
+        background-size: cover;
+        background-repeat: no-repeat;
+        margin: 0;
+        height: 100vh; /* 100% de la altura de la ventana */
+        width: 100vw; /* 100% del ancho de la ventana */
+      }
+    
+      /* Card styles 
+      .last-blogs__item {
+        margin-bottom: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+        
+      }
+    
+      .last-blogs__item:hover {
+        transform: translateY(-5px);
+      }*/
+      /* configuracion de las card de ambulancias */
+      .last-blogs__item {
+        color: #FFF;
+        margin-bottom: 20px;
+
+        border-radius: 10px;
+        padding: 0px 0px;
+    
+        font-family: "Lucida Console", Monaco, monospace;
+        font-size: 14px;
+        letter-spacing: 1px;
+        cursor: pointer;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        -webkit-transition: ease-out 0.4s;
+        -moz-transition: ease-out 0.4s;
+        transition: ease-out 0.4s;
+        background-color: #ffffff; 
+
+      }
+
+      .last-blogs__item:hover {
+        box-shadow: inset 0 -100px 0 0 #063D7A;
+        transform: translateY(-5px);
+      }
+
+
+      .most-read-blog__img {
+        border-top-left-radius: 0px;
+        border-top-right-radius: 0px;
+      }
+    
+      /* contenido styles */
+      .most-read-blog__content {
+        padding: 15px;
+      }
+    
+      .most-read-blog__title {
+        color: #555;
+        font-size: 20px;
+        margin-bottom: 10px;
+      }
+    
+      /* star styles */
+      .blog-card-stats {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+    
+      .blog-card-stats__item {
+        display: flex;
+        align-items: center;
+        color: #777;
+        margin-bottom: 5px;
+      }
+    
+      .blog-card-stats__item svg {
+        margin-right: 5px;
+      }
+    
+      /* autor styles */
+      .blog-author {
+        display: flex;
+        align-items: center;
+        color: #999;
+        font-size: 14px;
+        margin-top: 10px;
+      }
+    
+      .blog-author__img {
+        border-radius: 50%;
+        margin-right: 5px;
+      }
+    
+      /* animacion */
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+    
+      .pulse-animation {
+        animation: pulse 1.5s infinite ease-in-out;
+      }
+      /* Estilos para la sección de ambulancias */
+     
+
+      .card {
+        width: 18rem;
+        margin: 10px;
+        overflow: hidden; /* Para evitar que la animación de aumento afecte al contenido circundante */
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(245, 4, 4, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .card img {
+        height: 200px;
+        object-fit: cover;
+        /* Agrega un margen alrededor de la imagen */
+        margin: 10px auto 0; /* margen: arriba auto abajo */
+      }
+
+      /* Estilo de botón */
+      .card button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      /* Estilo de botón al hacer hover */
+      .card button:hover {
+        background-color: #0056b3;
+      }
+
+      /* Animación de aumento al hacer hover */
+      .card:hover {
+        transform: scale(1.05);
+      }
+
+      /* Estilos específicos para pantallas pequeñas */
+      @media screen and (max-width: 768px) {
+        .sidebar {
+          width: 200px; /* Ajusta el ancho del menú lateral */
+        }
+        .menu-toggle {
+          display: block; /* Muestra el botón de menú en pantallas pequeñas */
+        }
+        .navbar {
+          padding: 10px; /* Agrega espacio alrededor de la barra de navegación */
+        }
+        
+        /* Agrega este código dentro de tu media query para pantallas pequeñas */
+
+.last-blogs__item {
+  flex: 0 0 100%; /* Hace que las tarjetas ocupen todo el ancho en dispositivos móviles */
+  margin-bottom: 20px; /* Espacio entre tarjetas */
+}
+
+.most-read-blog__img {
+  max-width: 100%; /* La imagen se ajustará al ancho del contenedor */
+  height: auto; /* La altura se ajustará automáticamente para mantener la proporción */
+}
+
+.blog-card-stats {
+  flex-direction: column; /* Cambia la dirección de los elementos a vertical */
+}
+
+.blog-card-stats__item {
+  flex: 0 0 100%; /* Cada elemento ocupa todo el ancho */
+  margin-bottom: 10px; /* Espacio entre elementos */
+}
+
+.blog-author__img {
+  margin-right: 0; /* Elimina el espacio entre la imagen del autor y el nombre */
+  margin-bottom: 5px; /* Espacio entre la imagen del autor y el nombre */
+}
+
+        
+        /* Agrega más estilos específicos para pantallas pequeñas si es necesario */
+      }
+     
+        
+
+
+      body {
+       font-family: 'Signika Negative', sans-serif;
+       background-image: url("https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/rm222batch2-mind-03.jpg?v=1716839040735");
+        background-size: cover;
+        background-repeat: no-repeat;
+        margin: 0;
+        height: 100vh; /* 100% de la altura de la ventana */
+        width: 100vw; /* 100% del ancho de la ventana */
+        background-attachment: fixed;
+      }
+      .container-fluid {
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -5px;
+        margin-left: -5px;
+      }
+      .col {
+        flex-basis: 0;
+        flex-grow: 1;
+        max-width: 100%;
+        padding-right: 5px; /* Espaciado entre las columnas */
+        padding-left: 5px; /* Espaciado entre las columnas */
+      }
+      /* botones de menu*/
+      .sidebar {
+        padding: 10px;
+        position: fixed;
+        top: 53px;
+        left: 0;
+        height: 100%;
+        width: 250px;
+        background-color: #007bff; /* Fondo semitransparente cambiar color acordatesssssssssss*/
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Sombra */
+        z-index: 1000; /* Asegura que esté sobre el contenido principal */
+        transform: translateX(-250px); /* Ocultar inicialmente */
+        transition: transform 0.3s ease;
+      }
+      .sidebar h7 {
+        font-size: 16px; /* Tamaño de fuente del título */
+        margin-bottom: 10px; /* Espacio entre el título y la lista */
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+        /* Mostrar cuando está activo */
+      }
+      .sidebar ul {
+        list-style-type: none; /* Eliminar los puntos de la lista */
+        padding: 0;
+        margin: 0;
+      }
+
+      .sidebar ul li {
+        margin-bottom: 5px; /* Espacio entre elementos de la lista */
+      }
+
+      .sidebar ul li a {
+        display: block;
+        padding: 5px;
+        text-decoration: none;
+        color: white;
+        background-color: #007bff; /* Color de fondo */
+        border-radius: 10px; /* Bordes redondeados */
+        transition: background-color 0.3s, transform 0.3s; /* Agrega una transición suave */
+      }
+
+      .sidebar ul li a:hover {
+        background-color: #0056b3; /* Cambia el color de fondo al pasar el cursor */
+        transform: scale(1.05); /* Agranda ligeramente el botón */
+      }
+   
+      .menu-toggle {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        cursor: pointer;
+        z-index: 1100; /* Asegura que esté sobre el menú lateral */
+      }
+      li a {
+        color: white;
+        transition: color 0.3s; /* Agrega una transición suave para el cambio de color */
+      }
+
+      li a:hover {
+        color: lightgray; /* Cambia el color al pasar el cursor */
+      }
+
+</style>
+  </head>
+  <body style="overflow-y: auto">
+    <!-- BARRA DE NAVEGACION -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container-fluid">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <div class="navbar-nav me-auto">
+            <span class="nav-link"
+              >Bienvenido, {{ request.user.first_name|default:request.user.username }}</span
+            >
+            <a class="nav-link " aria-current="page" href="#">Mi Perfil</a>
+
+            <a id="ambulanceLink" class="nav-link active" href="#">Ambulancias</a>
+
+         <!--   <a id="menuLink" class="nav-link" href="#">menu</a> -->
+          </div>
+          <!-- Sección para mostrar el nombre de usuario -->
+          <div class="navbar-nav">
+            <!-- Agrega un botón para cerrar sesión -->
+            <a class="nav-link" href="{% url 'logout' %}">Cerrar sesión</a>
+          </div>
+
+          <!-- Botón para cambiar la contraseña -->
+          <button
+            class="nav-link navbar-nav"
+            data-bs-toggle="modal"
+            data-bs-target="#crearMantenimientoModal"
+          >
+            Cambiar contraseña
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!--MENU Y BARRA DE NAVEGACIOPN---->
+
+    <!---script tabla columna--------------------------------->
+    <script>
+      function showAmbulanceDescription(ambulance) {
+        var allDescriptions = document.querySelectorAll(
+          ".ambulance-description"
+        );
+        allDescriptions.forEach(function (description) {
+          description.style.display = "none";
+        });
+
+        var descriptionToShow = document.getElementById(
+          "ambulance-description-" + ambulance
+        );
+        if (descriptionToShow) {
+          descriptionToShow.style.display = "block";
+        }
+      }
+    </script>
+    <!-- reidirigir a inicio de sesion------------->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- MENÚ------------->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+
+    <script>
+      // JavaScript para mostrar u ocultar el menú lateral al hacer clic en el botón de menú
+      document
+        .getElementById("menu-toggle")
+        .addEventListener("click", function () {
+          var sidebar = document.getElementById("sidebar");
+          sidebar.classList.toggle("active"); // Alternar la clase 'active' para mostrar u ocultar el menú
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+
+
+    <!-- Modal -->
+<div class="modal fade" id="crearMantenimientoModal" tabindex="-1" aria-labelledby="crearMantenimientoModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="crearcontraseñaModalLabel">Crear Nueva contraseña</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Aquí está el formulario de cambio de contraseña -->
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="id_new_password">Nueva Contraseña:</label>
+            <input type="password" name="new_password" id="id_new_password" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label for="id_confirm_password">Confirmar Contraseña:</label>
+            <input type="password" name="confirm_password" id="id_confirm_password" class="form-control">
+          </div>
+          <button type="submit" class="btn btn-primary">Cambiar</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <!--ambulancias--------->
+
+
+
+<section class="last-blogs" id="ambulanceCards" >
+  {% for ambulancia in ambulancias %}
+  <div class="last-blogs_wrapper section_wrapper" >
+
+    <ul class="last-blogs__list">
+      
+ 
+      <li class="last-blogs__item"  >
+        <article >
+          <a href="/flota/informacion/{{ambulancia.id}}" class="most-read-blog__img-cont" style="margin-left: 25px; margin-top: 220px;">
+            {% if ambulancia.frontal %}
+              <img 
+                  class="most-read-blog__img ambulancia-info" 
+                  src="{{ ambulancia.frontal.url }}" 
+                  alt="Foto de ambulancia" 
+                  width="250" 
+                  height="250"
+              />
+            {% else %}
+              <img 
+                  class="most-read-blog__img ambulancia-info" 
+                  src="https://www.360palvelut.fi/wp-content/uploads/2020/03/placeholder_round_250x250.png"
+                  alt="Imagen no disponible" 
+                  width="250" 
+                  height="250"
+              />
+            {% endif %}
+         </a>
+
+          <div class="most-read-blog__content">
+            <a href="/flota/informacion/{{ambulancia.id}}">
+              <h3 class="most-read-blog__title id_ambulancia">
+                {{ambulancia.movil}}
+              </h3>
+            </a>
+
+            <ul class="blog-card-stats is-vertical gap-0">
+              <li class="blog-card-stats__item">
+
+                <img
+                src="https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/890f46cd-94a9-4467-918a-b17ac71570ac.image.png?v=1712506307269"
+                alt="author profile photo"
+                class="blog-author__img"
+                width="50"
+                height="50"
+              />
+
+                <p class="ambulancia-info"> {{ambulancia.placa}}  </p>
+              </li>
+              <li class="blog-card-stats__item">
+    <img src="https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/proximo.gif?v=1712505726499" alt="author profile photo" class="blog-author__img" width="50" height="50" />
+    <p class="ambulancia-info fecha-ven-soat">{{ ambulancia.ven_soat }}</p>
+</li>
+
+
+              <li class="blog-card-stats__item" >
+               <img
+                src="https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/8d6a55f6-8da9-47b1-8436-af0d3ac8cf47.image.png?v=1712506180241"
+                alt="author profile photo"
+                class="blog-author__img"
+                width="50"
+                height="50"
+              />
+
+                <p class="ambulancia-info">{{ ambulancia.marca }}</p>
+            </li>
+            <li class="blog-author">
+    <img src="https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/proximo.gif?v=1712505726499" alt="author profile photo" class="blog-author__img" width="50" height="50" />
+    <p class="ambulancia-info blog-author__name fecha-ve-tecno">{{ambulancia.ven_tecno}}</p>
+</li>
+            </ul>
+            
+          </div>
+        </article>
+      </li>
+      
+      
+      
+      
+
+    
+    </ul>
+  </div>
+  {% endfor %}
+ 
+  
+  
+  
+  
+</section>
+
+
+<!-- Script JavaScript -->
+<script>
+    // Función para comparar fechas y aplicar estilos de alerta
+    function verificarFechaAlerta() {
+        var fechaActual = new Date();
+        var elementosFecha = document.querySelectorAll('.fecha-ven-soat, .fecha-ve-tecno');
+        var id_ambulancia=document.querySelectorAll('.id_ambulancia');
+        elementosFecha.forEach(function(elemento) {
+
+            var fechaMostrada = new Date(elemento.textContent);
+
+            var diferenciaDias = Math.ceil(( fechaMostrada- fechaActual) / (1000 * 60 * 60 * 24));
+
+                    if (diferenciaDias <= 5 && diferenciaDias >= 1) {
+
+                        elemento.style.color = 'red';
+
+                        alert('¡Alerta! La fecha está a ' + diferenciaDias + ' día(s) de la fecha actual de la' + id_ambulancia );
+                    }
+
+                });
+            }
+
+            window.onload = function() {
+                verificarFechaAlerta();
+            };
+</script>
+
+<!--OCULTAR AMBULANCIAS---------->
+ <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Función para mostrar las ambulancias
+    function showAmbulances() {
+      document.getElementById("ambulanceCards").style.display = "flex";
+      document.getElementById("inicioContent").style.display = "none"; // Ocultar la sección de inicio
+    }
+
+    // Función para ocultar las ambulancias
+    function hideAmbulances() {
+      document.getElementById("ambulanceCards").style.display = "none";
+      document.getElementById("inicioContent").style.display = "block"; // Mostrar la sección de inicio
+    }
+
+    // Mostrar las ambulancias al cargar la página
+    showAmbulances();
+
+    // Mostrar las ambulancias cuando se hace clic en el enlace "Ambulancias"
+    document.getElementById("ambulanceLink").addEventListener("click", function () {
+      showAmbulances();
+    });
+
+    // Ocultar las ambulancias cuando se hace clic en "Mi Perfil"
+    document.querySelector('a[href="#"]').addEventListener("click", function () {
+      hideAmbulances();
+    });
+
+    // Ocultar las ambulancias cuando se hace clic en el enlace de menú
+    document.getElementById("menuLink").addEventListener("click", function () {
+      hideAmbulances();
+    });
+  });
+</script>
+
+
+<script>
+  // Obtener todos los elementos de la barra de navegación
+  const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+
+  // Función para quitar la clase activa de todos los enlaces
+  function removeActiveClass() {
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+    });
+  }
+
+  // Función para agregar la clase activa al enlace seleccionado
+  function setActiveClass(clickedLink) {
+    removeActiveClass();
+    clickedLink.classList.add('active');
+  }
+
+  // Agregar un evento clic a cada enlace de la barra de navegación
+  navLinks.forEach(link => {
+    link.addEventListener('click', function() {
+      setActiveClass(this);
+    });
+  });
+</script>
+<!-- Dentro de la sección <body> -->
+    <section id="inicioContent">
+    <style>
+        /* Estilos para la sección de inicio */
+        #inicioContent {
+            display: none; /* Inicialmente oculto */
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 0px;
+        }
+
+        #inicioContent h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        #inicioContent p {
+            font-size: 16px;
+            color: #555;
+        }
+
+        #inicioContent ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #inicioContent ul li {
+            font-size: 14px;
+            color: #777;
+            margin-bottom: 5px;
+        }
+
+        /* Estilos para el botón */
+        #inicioContent .update-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        #inicioContent .update-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <h1>Bienvenido, {{ request.user.username|default:request.user.username }}</h1>
+    <p>Aquí están tus detalles de perfil:</p>
+    <ul>
+        <li><strong>Nombre de usuario:</strong> {{ request.user.first_name }}</li>
+        <li><strong>Apellidos:</strong> {{ request.user.last_name }}</li>
+        <li><strong>Número de identidad:</strong> {{ request.user.email }}</li>
+        <li><strong>Celular:</strong> {{ cliente.telefono }}</li>
+        <li><strong>Fecha de nacimiento:</strong> {{ cliente.fecha_nacimiento }}</li>
+        <li><strong>Sexo:</strong> {{ cliente.sexo }}</li>
+    </ul>
+    <a href="/flota/cuentausuario"  style="background-color:063D7A" class="update-button">Actualizar datos</a>
+</section>
+
+<!--<script>
+    // Función para mostrar el contenido de inicio y ocultar las ambulancias
+    function showInicioContent() {
+        document.getElementById("inicioContent").style.display = "block";
+        document.getElementById("ambulanceCards").style.display = "none";
+    }
+
+    // Mostrar el contenido de inicio al cargar la página
+    showInicioContent();
+
+    // Actualizar el evento de clic del enlace "inicio"
+    var homeLink = document.querySelector('a[href="#"]');
+    if (homeLink) {
+        homeLink.addEventListener("click", function () {
+            showInicioContent();
+        });
+    }
+</script>-->
+
+
+ </body>
+</html>

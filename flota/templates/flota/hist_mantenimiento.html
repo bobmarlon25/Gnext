@@ -1,0 +1,932 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap" rel="stylesheet">
+
+    <!--  <link rel="stylesheet" href="{% static 'styles/index.css' %}" />-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+          
+    />
+    <link rel="stylesheet" href="/stylehistorial.css" />
+    <title>Hist.Mantenimiento</title>
+    <!-- Enlaza el favicon -->
+    <link rel="icon" href="https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/4a3871b1-5e96-429f-8046-85bdb422b44e.image.png?v=1708646250765" type="image/png">
+
+    <style>
+      
+      .ver-mas {
+  color: #007bff; /* Cambia el color según tus preferencias */
+  text-decoration: underline; /* Subraya el texto */
+        margin-left: 35px;
+  cursor: pointer; /* Cambia el cursor al pasar sobre el texto */
+}
+
+      /* Agrega un margen superior a las tarjetas */
+      .col-md-8 .row .col.mb-4 .card {
+        margin-top: 50px;
+        margin-left: 500px;
+      }
+
+      /* Agrega un margen inferior al contenedor fixed-content */
+      .fixed-content {
+        margin-bottom: 20px;
+      }
+
+     .fixed-content {
+    position: fixed;
+    background-image: url('https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/abstract-luxury-gradient-blue-background-smooth-dark-blue-with-black-vignette-studio-banner.jpg?v=1712618457076'); /* Ruta de tu imagen */
+    background-size: cover; /* Ajusta el tamaño de la imagen para cubrir completamente el contenedor */
+    background-repeat: no-repeat; /* Evita que la imagen de fondo se repita */
+    background-position: center; /* Centra la imagen de fondo */
+    top: 50px; /* Ajusta la posición según el tamaño de la barra de navegación */
+    height: calc(100vh - 50px); /* Ajusta la altura para ocupar el espacio restante */
+    overflow-y: auto; /* Agrega desplazamiento vertical si el contenido es demasiado largo */
+    padding: 20px; /* Agrega relleno para separar el contenido del borde */
+    width: 25%; /* Ocupa un cuarto del ancho de la página */
+}
+
+
+      .col-md-3 {
+        flex: 0 0 25%; /* Hace que la columna ocupe un cuarto del ancho de la página */
+        max-width: 25%; /* Fija el ancho máximo de la columna */
+      }
+
+      .navbar {
+        background-color: 1BDFAA;
+    background-size: cover; /* Ajusta el tamaño de la imagen para cubrir completamente el contenedor */
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+      }
+
+      /* -----------animacion de historial-------------------- */
+      ul {
+        list-style: none; /* Elimina los puntos de la lista */
+        padding: 0;
+        margin: 0;
+      }
+
+
+      .card:hover .overlay {
+        opacity: 0.5; /* Al pasar el mouse sobre la tarjeta, la superposición se vuelve semi-transparente */
+      }
+
+      /* ------------------------------------------------------------------------ */
+
+      /*-------------- ajuste de tamaño de kilometraje soat ---------------------------*/
+      .last-blogs__item .most-read-blog__title {
+        font-size: 16px; /* Ajusta el tamaño del texto según lo necesites */
+      }
+      .blog-card-stats__item {
+        font-size: 12px;
+      }
+
+
+      /* Container styles */
+      .last-blogs {
+        padding: 5px;
+        background-color: rgba(247, 247, 247, 0);
+        border-radius: 10px;
+        background-attachment: fixed;
+        background-size: cover;
+        background-repeat: no-repeat;
+        margin: 0;
+        height: 10vh; /* 100% de la altura de la ventana */
+        width: 10vw; /* 100% del ancho de la ventana */
+      }
+
+      /* Card styles 
+      .last-blogs__item {
+        margin-bottom: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+        
+      }
+    
+      .last-blogs__item:hover {
+        transform: translateY(-5px);
+      }*/
+    
+
+
+
+
+      .blog-card-stats__item {
+        display: flex;
+        align-items: center;
+        color: #777;
+        margin-bottom: 5px;
+      }
+
+      .blog-card-stats__item svg {
+        margin-right: 5px;
+      }
+
+     
+
+      .blog-author__img {
+  border-radius: 10%;
+  margin-right: 4rem; /* Por ejemplo, 4 veces el tamaño de la letra raíz */
+  margin-left: 0.5rem; /* Por ejemplo, 0.5 veces el tamaño de la letra raíz */
+}
+
+
+
+    
+      /*---------------------------------------------------------*/
+      /* Estilos específicos para pantallas pequeñas */
+      @media screen and (max-width: 768px) {
+        
+        .sidebar {
+          width: 200px; /* Ajusta el ancho del menú lateral */
+        }
+        
+  
+        }
+        .navbar {
+        font-family: 'Signika Negative', sans-serif;
+        background-image: url('https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/abstract-luxury-gradient-blue-background-smooth-dark-blue-with-black-vignette-studio-banner.jpg?v=1712618457076'); /* Ruta de tu imagen */
+    background-size: cover; /* Ajusta el tamaño de la imagen para cubrir completamente el contenedor */
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+      }
+
+        /* Agrega este código dentro de tu media query para pantallas pequeñas */
+
+        .last-blogs__item {
+          flex: 0 0 100%; /* Hace que las tarjetas ocupen todo el ancho en dispositivos móviles */
+          margin-bottom: 20px; /* Espacio entre tarjetas */
+        }
+
+        .most-read-blog__img {
+          max-width: 100%; /* La imagen se ajustará al ancho del contenedor */
+          height: auto; /* La altura se ajustará automáticamente para mantener la proporción */
+        }
+
+        .blog-card-stats {
+          flex-direction: column; /* Cambia la dirección de los elementos a vertical */
+        }
+
+        .blog-card-stats__item {
+          flex: 0 0 100%; /* Cada elemento ocupa todo el ancho */
+          margin-bottom: 10px; /* Espacio entre elementos */
+        }
+
+        /* Agrega más estilos específicos para pantallas pequeñas si es necesario */
+      
+
+      body {
+        
+        font-family: 'Signika Negative', sans-serif;
+         background-image: url("https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/rm222batch2-mind-03.jpg?v=1716839040735");
+        background-size: cover;
+        background-repeat: no-repeat;
+        margin: 0;
+        height: 100vh; /* 100% de la altura de la ventana */
+        width: 100vw; /* 100% del ancho de la ventana */
+        background-attachment: fixed;
+      }
+      .container-fluid {
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -5px;
+        margin-left: -5px;
+      }
+      .col {
+        flex-basis: 0;
+        flex-grow: 1;
+        max-width: 100%;
+        padding-right: 5px; /* Espaciado entre las columnas */
+        padding-left: 5px; /* Espaciado entre las columnas */
+      }
+      /* botones de menu*/
+      .sidebar {
+        padding: 10px;
+        position: fixed;
+        top: 53px;
+        left: 0;
+        height: 100%;
+        width: 250px;
+        background-color: #007bff; /* Fondo semitransparente cambiar color acordatesssssssssss*/
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Sombra */
+        z-index: 1000; /* Asegura que esté sobre el contenido principal */
+        transform: translateX(-250px); /* Ocultar inicialmente */
+        transition: transform 0.3s ease;
+      }
+      .sidebar h7 {
+        font-size: 16px; /* Tamaño de fuente del título */
+        margin-bottom: 10px; /* Espacio entre el título y la lista */
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+        /* Mostrar cuando está activo */
+      }
+      .sidebar ul {
+        list-style-type: none; /* Eliminar los puntos de la lista */
+        padding: 0;
+        margin: 0;
+      }
+
+      .sidebar ul li {
+        margin-bottom: 5px; /* Espacio entre elementos de la lista */
+      }
+
+      .sidebar ul li a {
+        display: block;
+        padding: 5px;
+        text-decoration: none;
+        color: black;
+        background-color: #007bff; /* Color de fondo */
+        border-radius: 10px; /* Bordes redondeados */
+        transition: background-color 0.3s, transform 0.3s; /* Agrega una transición suave */
+      }
+
+      .sidebar ul li a:hover {
+        background-color: #0056b3; /* Cambia el color de fondo al pasar el cursor */
+        transform: scale(1.05); /* Agranda ligeramente el botón */
+      }
+      /*------------------------------------------------------------------------*/
+     
+      li a {
+        color: black;
+        transition: color 0.3s; /* Agrega una transición suave para el cambio de color */
+      }
+
+      li a:hover {
+        color: lightgray; /* Cambia el color al pasar el cursor */
+      }
+
+.card {
+  width: 100%; /* Ocupa todo el ancho disponible */
+  margin: 10px auto; /* Espacio exterior alrededor de la tarjeta (arriba y abajo: 10px, izquierda y derecha: automático) */
+  overflow: hidden; /* Para evitar que la animación de aumento afecte al contenido circundante */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 4px 8px rgba(245, 4, 4, 0.1); /* Sombra */
+  transition: transform 0.3s ease; /* Transición suave en caso de hover */
+  min-height: 50px; /* Altura mínima de la tarjeta */
+  max-height: 50px; /* Altura máxima de la tarjeta */
+
+}
+.cardo {
+  width: 100%; /* Ocupa todo el ancho disponible */
+  margin: 10px auto; /* Espacio exterior alrededor de la tarjeta (arriba y abajo: 10px, izquierda y derecha: automático) */
+  overflow: hidden; /* Para evitar que la animación de aumento afecte al contenido circundante */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 4px 8px rgba(245, 4, 4, 0.1); /* Sombra */
+  transition: transform 0.3s ease; /* Transición suave en caso de hover */
+  min-height: 50px; /* Altura mínima de la tarjeta */
+  max-height: 50px; /* Altura máxima de la tarjeta */
+
+}
+
+.blog-card-stats.is-horizontal {
+  display: flex; /* Utiliza Flexbox para hacer la lista horizontal */
+  flex-direction: row; /* Establece la dirección de los elementos como horizontal */
+  list-style: none; /* Elimina los puntos de la lista */
+  padding: 0;
+  margin: 0px;
+}
+
+.blog-card-stats.is-horizontal .blog-card-stats__item {
+  margin-right: -20px; /* Espacio entre los elementos de la lista */
+   margin-bottom: 150px; /* Mueve los elementos hacia arriba */
+  margin-left: -3px; 
+  
+}
+
+.cardo img {
+  height: 200px; /* Altura de la imagen */
+  margin: 0; /* Sin margen en ninguna dirección */
+}
+
+
+
+.cardo button {
+  width: 100%; /* El botón ocupa todo el ancho de la tarjeta */
+  padding: 10px; /* Relleno del botón */
+  background-color: #007bff; /* Color de fondo */
+  color: white; /* Color del texto */
+  border: none; /* Sin borde */
+  cursor: pointer; /* Cursor al pasar sobre el botón */
+  transition: background-color 0.3s ease; /* Transición suave al cambiar el color de fondo */
+}
+
+.cardo button:hover {
+  background-color: #0056b3; /* Cambio de color de fondo al pasar el cursor */
+}
+
+
+.card img {
+  height: 200px; /* Altura de la imagen */
+  margin: 0; /* Sin margen en ninguna dirección */
+}
+
+
+
+.card button {
+  width: 100%; /* El botón ocupa todo el ancho de la tarjeta */
+  padding: 10px; /* Relleno del botón */
+  background-color: #007bff; /* Color de fondo */
+  color: white; /* Color del texto */
+  border: none; /* Sin borde */
+  cursor: pointer; /* Cursor al pasar sobre el botón */
+  transition: background-color 0.3s ease; /* Transición suave al cambiar el color de fondo */
+}
+
+.card button:hover {
+  background-color: #0056b3; /* Cambio de color de fondo al pasar el cursor */
+}
+
+.card:hover {
+  transform: scale(1.05); /* Animación de aumento al pasar el cursor sobre la tarjeta */
+}
+      
+/*.ambulancia-info {
+  margin-top: 1.5em; /* Ajusta el margen superior según el tamaño del texto */
+/*  margin-left: -5rem; /* Ajusta el margen izquierdo según el tamaño del texto */
+/*}
+
+
+      ul li {
+    color: #fff; /* Cambiar el color del texto a blanco */
+
+#inicioContent {
+    color: #fff; /* Cambiar el color del texto a blanco */
+  font-family: 'Signika Negative', sans-serif; 
+  
+}
+      
+  .ambulancia-info {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 100%; /* Ajusta este valor según sea necesario */
+  }
+  .fixed-column {
+    width: 100px; /* Cambia este valor según tus necesidades */
+  }
+      /*estilo de fecha*/
+          .h-search {
+        display: flex;
+        align-items: center;
+    }
+
+    .h-search input[type="date"] {
+        padding: 2px;
+        border: 1px solid #ccc;
+        border-radius: 20px;
+        margin-right: 10px;
+      margin-top: 10px;
+        font-size: 16px;
+    }
+
+        .h-search button {
+        padding: 4px;
+        border: 1px solid #ccc;
+        border-radius: 20px;
+        margin-right: 10px;
+      margin-top: 10px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+          .text-white {
+        color: white;
+    }
+        .black-text {
+    color: white;
+  }
+          .fixed-size-btn {
+            
+        width: 120px; /* Ancho fijo */
+        height: 55px; /* Alto fijo */
+        border: none; /* Sin borde */
+        cursor: pointer; /* Cursor al pasar sobre el botón */
+        transition: background-color 0.3s ease;
+        background-color:white;
+            color:black;
+    }
+
+    </style>
+   
+    <script>
+      function mostrarFecha() {
+          var fecha = new Date();
+          var dia = fecha.getDate();
+          var mes = fecha.getMonth() + 1; // Los meses comienzan desde 0, entonces se agrega 1
+          var anio = fecha.getFullYear();
+          
+          // Agregar ceros a la izquierda si es necesario para mantener el formato de dos dígitos
+          dia = (dia < 10) ? '0' + dia : dia;
+          mes = (mes < 10) ? '0' + mes : mes;
+          
+          var fechaActual = anio + '/' + mes + '/' + dia;
+          
+          document.getElementById('fecha').innerText = fechaActual;
+      }
+
+      // Llamar a la función para que inicie la actualización de la fecha
+      window.onload = function() {
+          mostrarFecha();
+      };
+  </script>
+  </head>
+  <body style="overflow-y: auto">
+  <!-- BARRA DE NAVEGACION -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="navbar-nav me-auto">
+          <span class="nav-link black-text">Bienvenido, {{ request.user.first_name|default:request.user.username }}</span>
+          <a class="nav-link active" aria-current="page" href="/flota/registrar">Inicio</a>
+
+            <a id="ambulanceLink" class="nav-link" href="/flota/historial_tanqueo/{{ambulancia.id}}" >Hist. De Tanqueo</a>
+
+            <a id="menuLink" class="nav-link" href="/flota/historial_mantenimiento/{{ambulancia.id}}">Hist. De Mantenimiento</a>
+            <a id="menuLink2" class="nav-link" href="/flota/hist_preoperacional/{{ambulancia.id}}">Hist. Preoperacional</a>
+          </div>
+
+        <!-- Sección para mostrar el nombre de usuario -->
+        <form method="POST" action="{% url 'busqueda_tanqueo' ambulancia.id %}" class="h-search" id="h-search" onsubmit="return validarFecha()">
+          {% csrf_token %}
+          <input type="date" name="fecha" id="fecha" value="{{ fecha_actual }}">
+          <button type="submit">
+            <img src="https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/redaccion.gif?v=1712696909669" alt="Ícono de lupa" width="25" height="25">
+          </button>
+        </form>
+
+        <script>
+          function validarFecha() {
+            var fechaInput = document.getElementById('fecha').value;
+            if (fechaInput === '') {
+              alert('Por favor ingresa una fecha.');
+              return false;
+            }
+            return true;
+          }
+
+          document.getElementById('fecha').addEventListener('keydown', function(event) {
+            var key = event.key || event.keyCode;
+            if (key === 'Delete' || key === 'Backspace') {
+              event.preventDefault();
+            }
+          });
+        </script>
+        
+        <div class="navbar-nav">
+          <a class="nav-link black-text" href="{% url 'logout' %}">Cerrar sesión</a>
+        </div>
+        <button
+          class="nav-link navbar-nav black-text"
+          data-bs-toggle="modal"
+          data-bs-target="#crearMantenimientoModal"
+        >
+          Cambiar contraseña
+        </button>
+      </div>
+    </div>
+  </nav>
+
+    <!---script tabla columna--------------------------------->
+    <script>
+      function showAmbulanceDescription(ambulance) {
+        var allDescriptions = document.querySelectorAll(
+          ".ambulance-description"
+        );
+        allDescriptions.forEach(function (description) {
+          description.style.display = "none";
+        });
+
+        var descriptionToShow = document.getElementById(
+          "ambulance-description-" + ambulance
+        );
+        if (descriptionToShow) {
+          descriptionToShow.style.display = "block";
+        }
+      }
+    </script>
+    <!-- reidirigir a inicio de sesion------------->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- MENÚ------------->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+
+    <script>
+      // JavaScript para mostrar u ocultar el menú lateral al hacer clic en el botón de menú
+      document
+        .getElementById("menu-toggle")
+        .addEventListener("click", function () {
+          var sidebar = document.getElementById("sidebar");
+          sidebar.classList.toggle("active"); // Alternar la clase 'active' para mostrar u ocultar el menú
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="crearMantenimientoModal"
+    tabindex="-1"
+    aria-labelledby="crearMantenimientoModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="crearMantenimientoModalLabel">Crear Nuevo Mantenimiento</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post">
+            {% load widget_tweaks %}
+            {% for field in form %}
+            <div class="mb-3">
+              {{ field.label_tag }} {% render_field field class+="form-control" %}
+            </div>
+            {% endfor %}
+            <input type="submit" class="btn btn-primary" value="Cambiar" />
+            {% csrf_token %}
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<section class="d-lg-none">
+  <section>
+    <style>
+  .fixed-size-btn {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.9em; /* Ajusta el tamaño de la fuente */
+    padding: 10px 5px; /* Ajusta el padding */
+  }
+
+  .btn-block {
+    display: block;
+    width: 100%;
+  }
+
+  @media (min-width: 576px) {
+    .fixed-size-btn {
+      font-size: 0.95em; /* Ajusta el tamaño de la fuente para pantallas más grandes */
+    }
+  }
+
+  @media (min-width: 768px) {
+    .fixed-size-btn {
+      font-size: 1em; /* Ajusta el tamaño de la fuente para pantallas más grandes */
+    }
+  }
+</style>
+
+<div class="container">
+  <div class="row justify-content-center align-items-center">
+    <div class="col-md-12 text-center mb-5 text-dark">
+      <h1>{{ ambulancia.movil }}</h1>
+      <img src="{{ ambulancia.lateral.url }}" alt="Descripción de la imagen" class="img-fluid rounded mx-auto d-block mb-3" style="max-width: 150px; margin-top: 20px" />
+    </div>
+    <div class="col-md-12">
+      <div class="row justify-content-center">
+        <div class="col-6 col-md-3 mb-3">
+          <button class="btn btn-light btn-block fixed-size-btn">Motor</button>
+        </div>
+        <div class="col-6 col-md-3 mb-3">
+          <button class="btn btn-light btn-block fixed-size-btn">Transmisión</button>
+        </div>
+        <div class="col-6 col-md-3 mb-3">
+          <button class="btn btn-light btn-block fixed-size-btn">Combustible</button>
+        </div>
+        <div class="col-6 col-md-3 mb-3">
+          <button class="btn btn-light btn-block fixed-size-btn">Frenos</button>
+        </div>
+        <div class="col-6 col-md-3 mb-3">
+          <button class="btn btn-light btn-block fixed-size-btn">Suspensión y Dirección</button>
+        </div>
+        <div class="col-6 col-md-3 mb-3">
+          <button class="btn btn-light btn-block fixed-size-btn">Electrico</button>
+        </div>
+        <div class="col-6 col-md-3 mb-3">
+          <button class="btn btn-light btn-block fixed-size-btn">Carrocería y Exteriores</button>
+        </div>
+        <div class="col-6 col-md-3 mb-3">
+          <button class="btn btn-light btn-block fixed-size-btn">Interiores y Confort</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="row justify-content-center align-items-center">
+        <div class="col-md-12">
+          <div class="row justify-content-center">
+            <div class="col mb-4">
+              <div class="cardo" style="cursor: pointer; margin-left: auto; margin-right: auto; margin-top: 30px">
+                <div class="card-body d-flex justify-content-around">
+                  <div class="text-center">
+                    <img src="https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/2enUMqNHB1rRqpZloidbiEAPoMo.svg?v=1712593493514" alt="author profile photo" class="blog-author__img" width="20" height="0" style="margin-top: -85px">
+                    <p class="ambulancia-info m-0" style="position: relative; top: -65%">Id</p>
+                  </div>
+                  <div class="text-center">
+                    <img src="https://cdn.glitch.global/be621715-f2c0-4a92-89b1-14a609ba19e4/factura.svg?v=1714601437338" alt="author profile photo" class="blog-author__img" width="20" height="0" style="margin-top: -85px">
+                    <p class="ambulancia-info m-0" style="position: relative; top: -65%">N° Factura</p>
+                  </div>
+                  <div class="text-center">
+                    <img src="https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/2emMk8W5rdWox2JnGyhRauHx7FO.svg?v=1712593494709" alt="author profile photo" class="blog-author__img" width="20" height="0" style="margin-top: -85px">
+                    <p class="ambulancia-info m-0" style="position: relative; top: -65%">Fecha</p>
+                  </div>
+                  <div class="text-center">
+                    <img src="https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/2enVD03WvMQ96fDd0ah6wf4TaZA.svg?v=1712593494158" alt="author profile photo" class="blog-author__img" width="20" height="0" style="margin-top: -85px">
+                    <p class="ambulancia-info m-0" style="position: relative; top: -65%">Kilometraje</p>
+                  </div>
+
+                </div>
+              </div>
+              <div class="container-fluid">
+                {% for registro in registros %}
+                <div class="row justify-content-center align-items-center">
+                  <div class="card text-center mb-3" onclick="window.location.href = '/flota/mantenimiento_info/{{ambulancia.id}}/{{registro.id}}';" style="cursor: pointer; margin-left: auto; margin-right: auto;">
+                    <div class="card-body d-flex justify-content-around">
+                      <div class="text-center">
+                        <p class="ambulancia-info m-0">{{registro.autor.first_name}}</p>
+                      </div>
+                      <div class="text-center">
+                        <p class="ambulancia-info m-0">{{registro.numero_factura}}</p>
+                      </div>
+                      <div class="text-center">
+                        <p class="ambulancia-info m-0">{{registro.fecha_registro}}</p>
+                      </div>
+                      <div class="text-center">
+                        <p class="ambulancia-info m-0">{{registro.mantenimiento_sistema}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+    </section>
+    <script>
+  // Función para filtrar las tarjetas según la búsqueda
+// Función para filtrar las tarjetas según la búsqueda
+function filterCards() {
+  var input, filter, cards, card, i, txtValue;
+  input = document.getElementById("searchInput");
+  filter = input.value.toUpperCase();
+  cards = document.getElementById("cardContainer").getElementsByClassName("card");
+  for (i = 0; i < cards.length; i++) {
+    card = cards[i];
+    txtValue = card.textContent || card.innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      card.style.display = "";
+    } else {
+      card.style.display = "none";
+    }
+  }
+}
+
+// Agrega un evento de escucha para la entrada de texto
+document.getElementById("searchInput").addEventListener("keyup", filterCards);
+
+// Función para llamar a filterCards cada vez que se agregue un nuevo elemento a registros
+function updateSearchOnNewEntry() {
+  // Llama a filterCards después de que se agregue un nuevo elemento a registros
+  filterCards();
+}
+
+// Llama a updateSearchOnNewEntry cada vez que se agregue un nuevo elemento a registros
+// Esto es solo un ejemplo, asegúrate de llamar a esta función desde donde se agreguen los nuevos elementos
+updateSearchOnNewEntry();
+
+</script>
+
+
+<script>
+  // Obtener todos los elementos de la barra de navegación
+  const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+
+  // Función para quitar la clase activa de todos los enlaces
+  function removeActiveClass() {
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+    });
+  }
+
+  // Función para agregar la clase activa al enlace seleccionado
+  function setActiveClass(clickedLink) {
+    removeActiveClass();
+    clickedLink.classList.add('active');
+  }
+
+  // Agregar un evento clic a cada enlace de la barra de navegación
+  navLinks.forEach(link => {
+    link.addEventListener('click', function() {
+      setActiveClass(this);
+    });
+  });
+</script>
+</body>
+<section class="d-none d-lg-block"> <!--pantallas grandes--> 
+  
+  <section>
+    <div class="col-md-3">
+        <div class="container fixed-content">
+            <div class="row justify-content-center align-items-center">
+                <div class="col-md-12">
+                    <div id="inicioContent" class="text-center mb-5 text-dark">
+                        <h1>{{ambulancia.movil}}</h1>
+                        <img src="{{ambulancia.lateral.url}}" alt="Descripción de la imagen" class="img-fluid rounded mx-auto d-block mb-3" style="max-width: 150px; margin-top: 20px"/>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6 mb-3">
+                            <button class="btn btn-light btn-block fixed-size-btn">Motor</button>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <button class="btn btn-light btn-block fixed-size-btn">Transmisión</button>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <button class="btn btn-light btn-block fixed-size-btn">Sistema de Combustible</button>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <button class="btn btn-light btn-block fixed-size-btn">Sistema de Frenos</button>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <button class="btn btn-light btn-block fixed-size-btn">Suspensión y Dirección</button>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <button class="btn btn-light btn-block fixed-size-btn">Sistema Electrico</button>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <button class="btn btn-light btn-block fixed-size-btn">Carrocería y Exteriores</button>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <button class="btn btn-light btn-block fixed-size-btn">Interiores y Confort</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section>
+  <div class="container-fluid">
+    <div class="row justify-content-center align-items-center">
+      <div class="col-md-8">
+        <!-- Contenido en una columna en el lado izquierdo -->
+        <div class="row justify-content-center row-cols-md-4">
+          <!-- Tarjeta con todas las imágenes y párrafos -->
+          <div class="col mb-4">
+            <div class="cardo"   style="cursor: pointer;margin-left:165px; margin-top: 90px">
+              <div class="card-body d-flex justify-content-around">
+               
+                <!-- Segunda imagen y párrafo -->
+                <div class="text-center">
+                  <img src="https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/2enUMqNHB1rRqpZloidbiEAPoMo.svg?v=1712593493514" alt="author profile photo" class="blog-author__img" width="20" height="0" style="margin-top: -85px">
+                  <p class="ambulancia-info m-0" style="position: relative; top: -65%">Id</p>
+                </div>
+                 <!-- Primera imagen y párrafo -->
+                <div class="text-center">
+                  <img src="https://cdn.glitch.global/be621715-f2c0-4a92-89b1-14a609ba19e4/factura.svg?v=1714601437338" alt="author profile photo" class="blog-author__img" width="20" height="0" style="margin-top: -85px">
+                  <p class="ambulancia-info m-0" style="position: relative; top: -65%; ">N° Factura</p>
+                </div>
+                <!-- Tercera imagen y párrafo -->
+                <div class="text-center">
+                  <img src="https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/2emMk8W5rdWox2JnGyhRauHx7FO.svg?v=1712593494709" alt="author profile photo" class="blog-author__img" width="20" height="0" style="margin-top: -85px">
+                  <p class="ambulancia-info m-0" style="position: relative; top: -65%">Fecha</p>
+                </div>
+                <!-- Cuarta imagen y párrafo -->
+                <div class="text-center">
+                  <img src="https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/2enVD03WvMQ96fDd0ah6wf4TaZA.svg?v=1712593494158" alt="author profile photo" class="blog-author__img" width="20" height="0" style="margin-top: -85px">
+                  <p class="ambulancia-info m-0" style="position: relative; top: -65%">Kilometraje</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Agrega más imágenes y párrafos aquí si es necesario -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section>
+  
+
+  <!-- <div class="container-fluid">
+    Agrega la barra de búsqueda con el ícono de lupa 
+    <div class="row justify-content-start" >
+      <div class="col-md-4 mt-3" >
+        <div class="input-group" style=" margin-top: -45px;margin-left: 390px">
+          <input  type="text" class="form-control" id="searchInput" placeholder="Buscar..." aria-label="Buscar" aria-describedby="basic-addon2">
+          <div class="input-group-append" >
+            <span class="input-group-text" id="basic-addon2" >
+             <a  title="Documento iconos animados creados por Freepik - Flaticon">
+  <img src="https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/redaccion.gif?v=1712696909669" alt="Ícono de lupa"
+       width="25"
+        height="25">
+</a>
+
+            </span>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+    {% for registro in registros %}
+      <div class="row justify-content-center align-items-center">
+        <div class="col-md-8">
+          <!-- Contenido en una columna en el lado izquierdo -->
+          <div class="row justify-content-center row-cols-md-4" id="cardContainer" style="max-height: 500px;">
+            <!-- Tarjeta con todas las imágenes y párrafos -->
+            <div class="col mb-4">
+              <div class="card" onclick="window.location.href = 'tu_enlace_aqui';" style="cursor: pointer; margin-left: 165px; margin-top: -50px;">
+                <div class="card-body d-flex justify-content-around">
+                  
+                  <!-- Segunda imagen y párrafo -->
+                  <div class="text-center fixed-column">
+                    
+                    <p class="ambulancia-info m-0" style="position: relative; ">{{registro.autor.first_name}}</p>
+                  </div>
+                  <!-- Primera imagen y párrafo -->
+                  <div class="text-center fixed-column">
+                    
+                    <p class="ambulancia-info m-0" style="position: relative;">{{registro.numero_factura}}</p>
+                  </div>
+                  <!-- Tercera imagen y párrafo -->
+                  <div class="text-center fixed-column">
+                    
+                    <p class="ambulancia-info m-0" style="position: relative; ">{{registro.fecha_registro}}</p>
+                  </div>
+                  <!-- Cuarta imagen y párrafo -->
+                  <div class="text-center fixed-column">
+                    
+                    <p class="ambulancia-info m-0" style="position: relative; ">{{registro.mantenimiento_sistema}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Agrega más imágenes y párrafos aquí si es necesario -->
+          </div>
+        </div>
+      </div>
+     {% endfor %}
+    
+    
+
+  
+</section>
+</section>
+
+
+
+</html>

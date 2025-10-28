@@ -1,0 +1,1449 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+<script>
+      // Función para manejar el evento beforeunload
+      function handleBeforeUnload(event) {
+        // Borrar el indicador isLoggedIn del almacenamiento local
+        localStorage.removeItem("isLoggedIn");
+      }
+
+      // Agregar el listener para el evento beforeunload
+      window.addEventListener("beforeunload", handleBeforeUnload);
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.es.min.js"></script>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Regist. mantenimiento</title>
+    <!-- Enlaza el favicon -->
+    <link rel="icon" href="https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/4a3871b1-5e96-429f-8046-85bdb422b44e.image.png?v=1708646250765" type="image/png">
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap" rel="stylesheet">
+
+    <!-- Estilos adicionales -->
+    <style>
+
+     body {
+        font-family: 'Signika Negative', sans-serif;
+        background-image: url("https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/rm222batch2-mind-03.jpg?v=1716839040735");
+        background-size: cover;
+        background-repeat: no-repeat;
+        margin: 0;
+        height: 100vh; /* 100% de la altura de la ventana */
+        width: 100vw; /* 100% del ancho de la ventana */
+        background-attachment: fixed;
+      }
+      .container {
+        max-width: auto;
+      }
+    .form-label {
+        font-size: 18px;
+        background-color: #A2BDCB; /* Color de fondo */
+        border-radius: 15px; /* Bordes redondeados */
+        padding: 1px; /* Espaciado interno para que el texto no esté pegado al borde */
+        display: inline-block; /* Para que el borde se ajuste al contenido */
+       
+    }
+
+    .form-check-label {
+        font-size: 20px;
+      color:#0056b3;
+    }
+      
+          label {
+        font-size: 20px;
+            
+    }
+    
+
+    </style>
+    <!-- Biblioteca jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.3/jspdf.umd.min.js"></script>
+
+    
+  </head>
+  <body style="overflow-y: auto" >
+    <!-- BARRA DE NAVEGACION -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="background-image: url('https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/abstract-luxury-gradient-blue-background-smooth-dark-blue-with-black-vignette-studio-banner.jpg?v=1712618457076'); background-size: cover;">
+      <div class="container-fluid">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <div class="navbar-nav me-auto">
+            <span class="nav-link"
+              >Bienvenido, {{ request.user.first_name|default:request.user.username }}</span
+            >
+            <a class="nav-link active" aria-current="page" href="/flota/registrar">Inicio</a>
+
+            <a  id="ambulanceLink" class="nav-link" href="/flota/historial_tanqueo/{{movil.id}}" >Hist. De Tanqueo</a>
+
+             <a id="menuLink" class="nav-link" href="/flota/historial_mantenimiento/{{movil.id}}">Hist. De Mantenimiento</a>
+             <a id="menuLink2" class="nav-link" href="/flota/hist_preoperacional/{{movil.id}}">Hist. Preoperacional</a>
+          </div>
+          <!-- Sección para mostrar el nombre de usuario -->
+          <div class="navbar-nav">
+            <!-- Agrega un botón para cerrar sesión -->
+            <a class="nav-link" href="{% url 'logout' %}">Cerrar sesión</a>
+          </div>
+          <!-- Botón para cambiar la contraseña -->
+          <button
+            class="nav-link navbar-nav"
+            data-bs-toggle="modal"
+            data-bs-target="#crearMantenimientoModal"
+          >
+            Cambiar contraseña
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!--MENU Y BARRA DE NAVEGACIOPN---->
+
+    <!---script tabla columna--------------------------------->
+    <script>
+      function showAmbulanceDescription(ambulance) {
+        var allDescriptions = document.querySelectorAll(
+          ".ambulance-description"
+        );
+        allDescriptions.forEach(function (description) {
+          description.style.display = "none";
+        });
+
+        var descriptionToShow = document.getElementById(
+          "ambulance-description-" + ambulance
+        );
+        if (descriptionToShow) {
+          descriptionToShow.style.display = "block";
+        }
+      }
+    </script>
+    <script>
+      // JavaScript para mostrar u ocultar el menú lateral al hacer clic en el botón de menú
+      document
+        .getElementById("menu-toggle")
+        .addEventListener("click", function () {
+          var sidebar = document.getElementById("sidebar");
+          sidebar.classList.toggle("active"); // Alternar la clase 'active' para mostrar u ocultar el menú
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!--  <script>
+      // Verificar si el usuario ha iniciado sesión
+      var isLoggedIn = localStorage.getItem("isLoggedIn");
+
+      // Si el usuario no ha iniciado sesión, redirigirlo a la página de inicio de sesión
+      if (!isLoggedIn) {
+        window.location.href = "usuario.html";
+      }
+    </script>------------------>
+   <nav
+    class="navbar bg-secondary text-dark bg-opacity-25"
+    data-bs-theme="light"
+>
+    <div class="container mt-5">
+        <h2 class="text-center">Formulario Preoperacional</h2>
+        <!--<img src="https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/mantenimiento.gif?v=1714331847849" alt="Descripción de la imagen" class="img-fluid mx-auto d-block mt-3" style="max-width: 10%;" />-->
+        <form class="form-inline" id="formulario-mantenimiento" action="{% url 'preoperacional' movil.id %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="mb-3">
+                <label for="detalle" class="form-label">Kilometraje:</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="detalle"
+                    name="detalle"
+                    required
+                />
+            </div>
+          <div class="mb-3">
+                <label for="fecha" class="form-label">Fecha de inspección:</label>
+                <input type="date" class="form-control" id="fecha" name="fecha" required />
+            </div>
+            <div class="mb-3">
+                <label for="detalle" class="form-label">Balas de oxígeno(Serie):</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="balas_oxigeno"
+                    name="balas_oxigeno"
+                    required
+                />
+            </div>
+          <div class="mb-3">
+                <label for="detalle" class="form-label">Cargo:</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="carga"
+                    name="carga"
+                    required
+                />
+            </div>
+          
+
+   <div>
+    <label for="fecha" class="form-label">Estado de presentación</label>
+
+<div class="input-group mb-3">
+    <div class="form-group">
+        <label class="form-check-label"  >Aseo Interno:</label><br>
+         <selection name= "aseo_interno" >
+        <input type="radio" id="aseo_interno_bueno" name="aseo_interno" value="bueno">
+        <label for="aseo_interno_bueno">Bueno</label><br>
+        <input type="radio" id="aseo_interno_regular" name="aseo_interno" value="regular">
+        <label for="aseo_interno_regular">Regular</label><br>
+        <input type="radio" id="aseo_interno_malo" name="aseo_interno" value="malo">
+        <label for="aseo_interno_malo">Malo</label><br>
+     </selection>
+    </div>
+  </div>
+
+    
+
+
+<div class="input-group mb-3">
+    <div class="form-group">
+        <label class="form-check-label">Aseo Externo:</label><br>
+      <selection name= "aseo_externo" >
+        <input type="radio" id="aseo_externo_bueno" name="aseo_externo" value="bueno">
+       
+        <label for="aseo_externo_bueno">Bueno</label><br>
+        <input type="radio" id="aseo_externo_regular" name="aseo_externo" value="regular">
+        <label for="aseo_externo_regular">Regular</label><br>
+        <input type="radio" id="aseo_externo_malo" name="aseo_externo" value="malo">
+        <label for="aseo_externo_malo">Malo</label><br>
+      </selection>
+    </div>
+  </div>
+     <div class="form-group">
+        <label class="form-check-label" >Latas:</label><br>
+        <input type="radio" id="latas_bueno" name="latas" value="bueno">
+        <label for="latas_bueno">Bueno</label><br>
+        <input type="radio" id="latas_regular" name="latas" value="regular">
+        <label for="latas_regular">Regular</label><br>
+        <input type="radio" id="latas_malo" name="latas" value="malo">
+        <label for="latas_malo">Malo</label><br>
+    </div>
+
+    <div class="form-group">
+        <label class="form-check-label">Pintura:</label><br>
+        <input type="radio" id="pintura_bueno" name="pintura" value="bueno">
+        <label for="pintura_bueno">Bueno</label><br>
+        <input type="radio" id="pintura_regular" name="pintura" value="regular">
+        <label for="pintura_regular">Regular</label><br>
+        <input type="radio" id="pintura_malo" name="pintura" value="malo">
+        <label for="pintura_malo">Malo</label><br>
+    </div>
+          </div>
+
+          <div>
+              <label for="fecha" class="form-label">Estado de Comodidad</label>
+    
+          
+    <div class="input-group mb-3 ">
+      <div class="form-group">
+        <label class="form-check-label">Silleteria(Anclaje,Cojineria):</label><br>
+        <input type="radio" id="silleteria_bueno" name="silleteria" value="bueno">
+        <label for="silleteria_bueno">Bueno</label><br>
+        <input type="radio" id="silleteria_regular" name="silleteria" value="regular">
+        <label for="silleteria_regular">Regular</label><br>
+        <input type="radio" id="silleteria_malo" name="silleteria" value="malo">
+        <label for="silleteria_malo">Malo</label><br>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <div class="form-group">
+        <label class="form-check-label">Encendedor:</label><br>
+        <input type="radio" id="encendedor_bueno" name="encendedor" value="bueno">
+        <label for="encendedor_bueno">Bueno</label><br>
+        <input type="radio" id="encendedor_regular" name="encendedor" value="regular">
+        <label for="encendedor_regular">Regular</label><br>
+        <input type="radio" id="encendedor_malo" name="encendedor" value="malo">
+        <label for="encendedor_malo">Malo</label><br>
+      </div>
+    </div>
+
+      <div class="form-group">
+        <label class="form-check-label">Luces Interiores:</label><br>
+        <input type="radio" id="luces_interiores_bueno" name="luces_interiores" value="bueno">
+        <label for="luces_interiores_bueno">Bueno</label><br>
+        <input type="radio" id="luces_interiores_regular" name="luces_interiores" value="regular">
+        <label for="luces_interiores_regular">Regular</label><br>
+        <input type="radio" id="luces_interiores_malo" name="luces_interiores" value="malo">
+        <label for="luces_interiores_malo">Malo</label><br>
+    </div>
+
+    <div class="form-group">
+      
+        <label class="form-check-label">Tapetes:</label><br>
+        <input type="radio" id="tapetes_bueno" name="tapetes" value="bueno">
+        <label for="tapetes_bueno">Bueno</label><br>
+        <input type="radio" id="tapetes_regular" name="tapetes" value="regular">
+        <label for="tapetes_regular">Regular</label><br>
+        <input type="radio" id="tapetes_malo" name="tapetes" value="malo">
+        <label for="tapetes_malo">Malo</label><br>
+    </div>
+</div>
+
+
+    <div>
+      <label for="fecha" class="form-label">Niveles de Liquido</label>
+    
+          
+    
+        <div class="form-group">
+    <label class="form-check-label">Nivel De Aceite Del Motor:</label><br>
+    <input type="radio" id="aceite_motor_bueno" name="aceite_motor" value="bueno">
+    <label for="aceite_motor_bueno">Bueno</label><br>
+    <input type="radio" id="aceite_motor_regular" name="aceite_motor" value="regular">
+    <label for="aceite_motor_regular">Regular</label><br>
+    <input type="radio" id="aceite_motor_malo" name="aceite_motor" value="malo">
+    <label for="aceite_motor_malo">Malo</label><br>
+          
+</div>
+<div class="form-group">
+    <label class="form-check-label">Nivel De Liquido De Frenos:</label><br>
+    <input type="radio" id="liquido_frenos_bueno" name="liquido_frenos" value="bueno">
+    <label for="liquido_frenos_bueno">Bueno</label><br>
+    <input type="radio" id="liquido_frenos_regular" name="liquido_frenos" value="regular">
+    <label for="liquido_frenos_regular">Regular</label><br>
+    <input type="radio" id="liquido_frenos_malo" name="liquido_frenos" value="malo">
+    <label for="liquido_frenos_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Nivel De Agua Del Radiador:</label><br>
+    <input type="radio" id="agua_radiador_bueno" name="agua_radiador" value="bueno">
+    <label for="agua_radiador_bueno">Bueno</label><br>
+    <input type="radio" id="agua_radiador_regular" name="agua_radiador" value="regular">
+    <label for="agua_radiador_regular">Regular</label><br>
+    <input type="radio" id="agua_radiador_malo" name="agua_radiador" value="malo">
+    <label for="agua_radiador_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Nivel De Agua De La Bateria:</label><br>
+    <input type="radio" id="agua_bateria_bueno" name="agua_bateria" value="bueno">
+    <label for="agua_bateria_bueno">Bueno</label><br>
+    <input type="radio" id="agua_bateria_regular" name="agua_bateria" value="regular">
+    <label for="agua_bateria_regular">Regular</label><br>
+    <input type="radio" id="agua_bateria_malo" name="agua_bateria" value="malo">
+    <label for="agua_bateria_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Nivel De Aceite Hidraulico:</label><br>
+    <input type="radio" id="aceite_hidraulico_bueno" name="aceite_hidraulico" value="bueno">
+    <label for="aceite_hidraulico_bueno">Bueno</label><br>
+    <input type="radio" id="aceite_hidraulico_regular" name="aceite_hidraulico" value="regular">
+    <label for="aceite_hidraulico_regular">Regular</label><br>
+    <input type="radio" id="aceite_hidraulico_malo" name="aceite_hidraulico" value="malo">
+    <label for="aceite_hidraulico_malo">Malo</label><br>
+</div>
+
+          </div>
+          <div>
+             <label for="fecha" class="form-label">Perdida de Líquido</label>
+    
+          
+            <div class="form-group">
+    <label class="form-check-label">Fugas De ACPM O Gasolina:</label><br>
+    <input type="radio" id="fugas_acpm_gasolina_bueno" name="fuga" value="bueno">
+    <label for="fugas_acpm_gasolina_bueno">Bueno</label><br>
+    <input type="radio" id="fugas_acpm_gasolina_regular" name="fuga" value="regular">
+    <label for="fugas_acpm_gasolina_regular">Regular</label><br>
+    <input type="radio" id="fugas_acpm_gasolina_malo" name="fuga" value="malo">
+    <label for="fugas_acpm_gasolina_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Fugas De Agua:</label><br>
+    <input type="radio" id="fugas_agua_bueno" name="fugas_agua" value="bueno">
+    <label for="fugas_agua_bueno">Bueno</label><br>
+    <input type="radio" id="fugas_agua_regular" name="fugas_agua" value="regular">
+    <label for="fugas_agua_regular">Regular</label><br>
+    <input type="radio" id="fugas_agua_malo" name="fugas_agua" value="malo">
+    <label for="fugas_agua_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Fugas De Aceite De Transmisión:</label><br>
+    <input type="radio" id="fugas_aceite_transmision_bueno" name="fugas_aceite" value="bueno">
+    <label for="fugas_aceite_transmision_bueno">Bueno</label><br>
+    <input type="radio" id="fugas_aceite_transmision_regular" name="fugas_aceite" value="regular">
+    <label for="fugas_aceite_transmision_regular">Regular</label><br>
+    <input type="radio" id="fugas_aceite_transmision_malo" name="fugas_aceite" value="malo">
+    <label for="fugas_aceite_transmision_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Fuga De Aceite De Caja:</label><br>
+    <input type="radio" id="fuga_aceite_caja_bueno" name="aceite_caja" value="bueno">
+    <label for="fuga_aceite_caja_bueno">Bueno</label><br>
+    <input type="radio" id="fuga_aceite_caja_regular" name="aceite_caja" value="regular">
+    <label for="fuga_aceite_caja_regular">Regular</label><br>
+    <input type="radio" id="fuga_aceite_caja_malo" name="aceite_caja" value="malo">
+    <label for="fuga_aceite_caja_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Fuga De Liquido De Frenos:</label><br>
+    <input type="radio" id="fuga_liquido_frenos_bueno" name="fuga_liquido" value="bueno">
+    <label for="fuga_liquido_frenos_bueno">Bueno</label><br>
+    <input type="radio" id="fuga_liquido_frenos_regular" name="fuga_liquido" value="regular">
+    <label for="fuga_liquido_frenos_regular">Regular</label><br>
+    <input type="radio" id="fuga_liquido_frenos_malo" name="fuga_liquido" value="malo">
+    <label for="fuga_liquido_frenos_malo">Malo</label><br>
+</div>
+
+          </div>
+          
+          <div>
+<label class="form-label" >Mesa de Control</label>
+<div class="form-group">
+    <label class="form-check-label">Instrumentos:</label><br>
+    <input type="radio" id="instrumentos_bueno" name="instrumentos" value="bueno">
+    <label for="instrumentos_bueno">Bueno</label><br>
+    <input type="radio" id="instrumentos_regular" name="instrumentos" value="regular">
+    <label for="instrumentos_regular">Regular</label><br>
+    <input type="radio" id="instrumentos_malo" name="instrumentos" value="malo">
+    <label for="instrumentos_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Luces De Tablero:</label><br>
+    <input type="radio" id="luces_tablero_bueno" name="luces_tablero" value="bueno">
+    <label for="luces_tablero_bueno">Bueno</label><br>
+    <input type="radio" id="luces_tablero_regular" name="luces_tablero" value="regular">
+    <label for="luces_tablero_regular">Regular</label><br>
+    <input type="radio" id="luces_tablero_malo" name="luces_tablero" value="malo">
+    <label for="luces_tablero_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Nivel De Combustible:</label><br>
+    <input type="radio" id="nivel_combustible_bueno" name="nivel_combustible" value="bueno">
+    <label for="nivel_combustible_bueno">Bueno</label><br>
+    <input type="radio" id="nivel_combustible_regular" name="nivel_combustible" value="regular">
+    <label for="nivel_combustible_regular">Regular</label><br>
+    <input type="radio" id="nivel_combustible_malo" name="nivel_combustible" value="malo">
+    <label for="nivel_combustible_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Pito:</label><br>
+    <input type="radio" id="pito_bueno" name="pito" value="bueno">
+    <label for="pito_bueno">Bueno</label><br>
+    <input type="radio" id="pito_regular" name="pito" value="regular">
+    <label for="pito_regular">Regular</label><br>
+    <input type="radio" id="pito_malo" name="pito" value="malo">
+    <label for="pito_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Odometro/Tacometro:</label><br>
+    <input type="radio" id="odometro_tacometro_bueno" name="odometro" value="bueno">
+    <label for="odometro_tacometro_bueno">Bueno</label><br>
+    <input type="radio" id="odometro_tacometro_regular" name="odometro" value="regular">
+    <label for="odometro_tacometro_regular">Regular</label><br>
+    <input type="radio" id="odometro_tacometro_malo" name="odometro" value="malo">
+    <label for="odometro_tacometro_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Velocimetro:</label><br>
+    <input type="radio" id="velocimetro_bueno" name="velocimetro" value="bueno">
+    <label for="velocimetro_bueno">Bueno</label><br>
+    <input type="radio" id="velocimetro_regular" name="velocimetro" value="regular">
+    <label for="velocimetro_regular">Regular</label><br>
+    <input type="radio" id="velocimetro_malo" name="velocimetro" value="malo">
+    <label for="velocimetro_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Indicador De Aceite:</label><br>
+    <input type="radio" id="indicador_aceite_bueno" name="indicador_aceite" value="bueno">
+    <label for="indicador_aceite_bueno">Bueno</label><br>
+    <input type="radio" id="indicador_aceite_regular" name="indicador_aceite" value="regular">
+    <label for="indicador_aceite_regular">Regular</label><br>
+    <input type="radio" id="indicador_aceite_malo" name="indicador_aceite" value="malo">
+    <label for="indicador_aceite_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Indicador De Temperatura:</label><br>
+    <input type="radio" id="indicador_temperatura_bueno" name="indicador_temperatura" value="bueno">
+    <label for="indicador_temperatura_bueno">Bueno</label><br>
+    <input type="radio" id="indicador_temperatura_regular" name="indicador_temperatura" value="regular">
+    <label for="indicador_temperatura_regular">Regular</label><br>
+    <input type="radio" id="indicador_temperatura_malo" name="indicador_temperatura" value="malo">
+    <label for="indicador_temperatura_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Sirena:</label><br>
+    <label for="indicador_temperatura_bueno">Bueno</label><br>
+    <input type="radio" id="indicador_temperatura_regula" name="Sirena" value="regular">
+    <label for="indicador_temperatura_regular">Regular</label><br>
+    <input type="radio" id="indicador_temperatura_mal" name="Sirena" value="malo">
+    <label for="indicador_temperatura_malo">Malo</label><br>
+          </div>
+            
+             <div>
+<label class="form-label" >Seguridad Pasiva</label>
+         <div class="form-group">
+    <label class="form-check-label">Cinturones De Seguridad:</label><br>
+    <input type="radio" id="cinturones_seguridad_bueno" name="c_seguridad" value="bueno">
+    <label for="cinturones_seguridad_bueno">Bueno</label><br>
+    <input type="radio" id="cinturones_seguridad_regular" name="c_seguridad" value="regular">
+    <label for="cinturones_seguridad_regular">Regular</label><br>
+    <input type="radio" id="cinturones_seguridad_malo" name="c_seguridad" value="malo">
+    <label for="cinturones_seguridad_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Airbags:</label><br>
+    <input type="radio" id="airbags_bueno" name="airbags" value="bueno">
+    <label for="airbags_bueno">Bueno</label><br>
+    <input type="radio" id="airbags_regular" name="airbags" value="regular">
+    <label for="airbags_regular">Regular</label><br>
+    <input type="radio" id="airbags_malo" name="airbags" value="malo">
+    <label for="airbags_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Chasis Y Carroceria:</label><br>
+    <input type="radio" id="chasis_carroceria_bueno" name="chasis_carroceria" value="bueno">
+    <label for="chasis_carroceria_bueno">Bueno</label><br>
+    <input type="radio" id="chasis_carroceria_regular" name="chasis_carroceria" value="regular">
+    <label for="chasis_carroceria_regular">Regular</label><br>
+    <input type="radio" id="chasis_carroceria_malo" name="chasis_carroceria" value="malo">
+    <label for="chasis_carroceria_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Cristales(Vidrios):</label><br>
+    <input type="radio" id="cristales_vidrios_bueno" name="cristales" value="bueno">
+    <label for="cristales_vidrios_bueno">Bueno</label><br>
+    <input type="radio" id="cristales_vidrios_regular" name="cristales" value="regular">
+    <label for="cristales_vidrios_regular">Regular</label><br>
+    <input type="radio" id="cristales_vidrios_malo" name="cristales" value="malo">
+    <label for="cristales_vidrios_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Apoyacabezas:</label><br>
+    <input type="radio" id="apoyacabezas_bueno" name="apoyacabezas" value="bueno">
+    <label for="apoyacabezas_bueno">Bueno</label><br>
+    <input type="radio" id="apoyacabezas_regular" name="apoyacabezas" value="regular">
+    <label for="apoyacabezas_regular">Regular</label><br>
+    <input type="radio" id="apoyacabezas_malo" name="apoyacabezas" value="malo">
+    <label for="apoyacabezas_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Estado De Espejos:</label><br>
+    <input type="radio" id="estado_espejos_bueno" name="estado_espejos" value="bueno">
+    <label for="estado_espejos_bueno">Bueno</label><br>
+    <input type="radio" id="estado_espejos_regular" name="estado_espejos" value="regular">
+    <label for="estado_espejos_regular">Regular</label><br>
+    <input type="radio" id="estado_espejos_malo" name="estado_espejos" value="malo">
+    <label for="estado_espejos_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Espejo Lateral Derecho:</label><br>
+       <input type="radio" id="estado_espejos1" name="espejos_lateral" value="bueno">
+    <label for="estado_espejos_bueno">Bueno</label><br>
+    <input type="radio" id="estado_espejos2" name="espejos_lateral" value="regular">
+    <label for="estado_espejos_regular">Regular</label><br>
+    <input type="radio" id="estado_espejos" name="espejos_lateral" value="malo">
+    <label for="estado_espejos_malo">Malo</label><br>
+              </div>
+               <div class="form-group">
+    <label class="form-check-label">Espejo Lateral Izquierdo:</label><br>
+    <input type="radio" id="espejo_lateral_izquierdo_bueno" name="espejo_izquierdo" value="bueno">
+    <label for="espejo_lateral_izquierdo_bueno">Bueno</label><br>
+    <input type="radio" id="espejo_lateral_izquierdo_regular" name="espejo_izquierdo" value="regular">
+    <label for="espejo_lateral_izquierdo_regular">Regular</label><br>
+    <input type="radio" id="espejo_lateral_izquierdo_malo" name="espejo_izquierdo" value="malo">
+    <label for="espejo_lateral_izquierdo_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Espejo Retrovisor:</label><br>
+    <input type="radio" id="espejo_retrovisor_bueno" name="espejo_retrovisor" value="bueno">
+    <label for="espejo_retrovisor_bueno">Bueno</label><br>
+    <input type="radio" id="espejo_retrovisor_regular" name="espejo_retrovisor" value="regular">
+    <label for="espejo_retrovisor_regular">Regular</label><br>
+    <input type="radio" id="espejo_retrovisor_malo" name="espejo_retrovisor" value="malo">
+    <label for="espejo_retrovisor_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Farolas:</label><br>
+    <input type="radio" id="farolas_bueno" name="farolas" value="bueno">
+    <label for="farolas_bueno">Bueno</label><br>
+    <input type="radio" id="farolas_regular" name="farolas" value="regular">
+    <label for="farolas_regular">Regular</label><br>
+    <input type="radio" id="farolas_malo" name="farolas" value="malo">
+    <label for="farolas_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Manijas Exteriores:</label><br>
+    <input type="radio" id="manijas_exteriores_bueno" name="manijas_exterior" value="bueno">
+    <label for="manijas_exteriores_bueno">Bueno</label><br>
+    <input type="radio" id="manijas_exteriores_regular" name="manijas_exterior" value="regular">
+    <label for="manijas_exteriores_regular">Regular</label><br>
+    <input type="radio" id="manijas_exteriores_malo" name="manijas_exterior" value="malo">
+    <label for="manijas_exteriores_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Parachoques Delantero:</label><br>
+    <input type="radio" id="parachoques_delantero_bueno" name="parachoques_delantero" value="bueno">
+    <label for="parachoques_delantero_bueno">Bueno</label><br>
+    <input type="radio" id="parachoques_delantero_regular" name="parachoques_delantero" value="regular">
+    <label for="parachoques_delantero_regular">Regular</label><br>
+    <input type="radio" id="parachoques_delantero_malo" name="parachoques_delantero" value="malo">
+    <label for="parachoques_delantero_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Parachoques Trasero:</label><br>
+    <input type="radio" id="parachoques_trasero_bueno" name="parachoques_trasero" value="bueno">
+    <label for="parachoques_trasero_bueno">Bueno</label><br>
+    <input type="radio" id="parachoques_trasero_regular" name="parachoques_trasero" value="regular">
+    <label for="parachoques_trasero_regular">Regular</label><br>
+    <input type="radio" id="parachoques_trasero_malo" name="parachoques_trasero" value="malo">
+    <label for="parachoques_trasero_malo">Malo</label><br>
+</div>
+
+
+            </div>
+            <div>
+              <label class="form-label" >Seguridad Activa</label>
+<div class="form-group">
+    <label class="form-check-label">Estado De Dirección:</label><br>
+    <input type="radio" id="estado_direccion_bueno" name="direccion" value="bueno">
+    <label for="estado_direccion_bueno">Bueno</label><br>
+    <input type="radio" id="estado_direccion_regular" name="direccion" value="regular">
+    <label for="estado_direccion_regular">Regular</label><br>
+    <input type="radio" id="estado_direccion_malo" name="direccion" value="malo">
+    <label for="estado_direccion_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Estado De Supensión Delantera:</label><br>
+    <input type="radio" id="estado_suspension_delantera_bueno" name="suspension_delantera" value="bueno">
+    <label for="estado_suspension_delantera_bueno">Bueno</label><br>
+    <input type="radio" id="estado_suspension_delantera_regular" name="suspension_delantera" value="regular">
+    <label for="estado_suspension_delantera_regular">Regular</label><br>
+    <input type="radio" id="estado_suspension_delantera_malo" name="suspension_delantera" value="malo">
+    <label for="estado_suspension_delantera_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Amortiguadores Delanteros:</label><br>
+    <input type="radio" id="amortiguadores_delanteros_bueno" name="amortiguadores_delantero" value="bueno">
+    <label for="amortiguadores_delanteros_bueno">Bueno</label><br>
+    <input type="radio" id="amortiguadores_delanteros_regular" name="amortiguadores_delantero" value="regular">
+    <label for="amortiguadores_delanteros_regular">Regular</label><br>
+    <input type="radio" id="amortiguadores_delanteros_malo" name="amortiguadores_delantero" value="malo">
+    <label for="amortiguadores_delanteros_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Estado De Suspensión Trasera:</label><br>
+    <input type="radio" id="estado_suspension_trasera_bueno" name="suspension_trasera" value="bueno">
+    <label for="estado_suspension_trasera_bueno">Bueno</label><br>
+    <input type="radio" id="estado_suspension_trasera_regular" name="suspension_trasera" value="regular">
+    <label for="estado_suspension_trasera_regular">Regular</label><br>
+    <input type="radio" id="estado_suspension_trasera_malo" name="suspension_trasera" value="malo">
+    <label for="estado_suspension_trasera_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Amortiguadores Traseros:</label><br>
+    <input type="radio" id="amortiguadores_traseros_bueno" name="amortiguadores_trasero" value="bueno">
+    <label for="amortiguadores_traseros_bueno">Bueno</label><br>
+    <input type="radio" id="amortiguadores_traseros_regular" name="amortiguadores_trasero" value="regular">
+    <label for="amortiguadores_traseros_regular">Regular</label><br>
+    <input type="radio" id="amortiguadores_traseros_malo" name="amortiguadores_trasero" value="malo">
+    <label for="amortiguadores_traseros_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Lavaparabrisas:</label><br>
+        <input type="radio" id="Lavaparabrisas3" name="Lava_parabrisas" value="bueno">
+    <label for="vidrio_frontal_bueno">Bueno</label><br>
+    <input type="radio" id="Lavaparabrisas2" name="Lava_parabrisas" value="regular">
+    <label for="vidrio_frontal_regular">Regular</label><br>
+    <input type="radio" id="Lavaparabrisas" name="Lava_parabrisas" value="malo">
+    <label for="vidrio_frontal_malo">Malo</label><br>
+<div class="form-group">
+    <label class="form-check-label">Vidrio Frontal:</label><br>
+    <input type="radio" id="vidrio_frontal_bueno" name="vidrio_frontal" value="bueno">
+    <label for="vidrio_frontal_bueno">Bueno</label><br>
+    <input type="radio" id="vidrio_frontal_regular" name="vidrio_frontal" value="regular">
+    <label for="vidrio_frontal_regular">Regular</label><br>
+    <input type="radio" id="vidrio_frontal_malo" name="vidrio_frontal" value="malo">
+    <label for="vidrio_frontal_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Limpiabrisas Derecho:</label><br>
+    <input type="radio" id="limpiabrisas_derecho_bueno" name="limpiabrisas_derecho" value="bueno">
+    <label for="limpiabrisas_derecho_bueno">Bueno</label><br>
+    <input type="radio" id="limpiabrisas_derecho_regular" name="limpiabrisas_derecho" value="regular">
+    <label for="limpiabrisas_derecho_regular">Regular</label><br>
+    <input type="radio" id="limpiabrisas_derecho_malo" name="limpiabrisas_derecho" value="malo">
+    <label for="limpiabrisas_derecho_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Limpiabrisas Izquierdo:</label><br>
+    <input type="radio" id="limpiabrisas_izquierdo_bueno" name="limpiabrisas_izquierdo" value="bueno">
+    <label for="limpiabrisas_izquierdo_bueno">Bueno</label><br>
+    <input type="radio" id="limpiabrisas_izquierdo_regular" name="limpiabrisas_izquierdo" value="regular">
+    <label for="limpiabrisas_izquierdo_regular">Regular</label><br>
+    <input type="radio" id="limpiabrisas_izquierdo_malo" name="limpiabrisas_izquierdo" value="malo">
+    <label for="limpiabrisas_izquierdo_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Aseo Del Área Del Motor:</label><br>
+    <input type="radio" id="aseo_motor_bueno" name="aseo_motor" value="bueno">
+    <label for="aseo_motor_bueno">Bueno</label><br>
+    <input type="radio" id="aseo_motor_regular" name="aseo_motor" value="regular">
+    <label for="aseo_motor_regular">Regular</label><br>
+    <input type="radio" id="aseo_motor_malo" name="aseo_motor" value="malo">
+    <label for="aseo_motor_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Bornes De Batería:</label><br>
+    <input type="radio" id="bornes_bateria_bueno" name="bornes_bateria" value="bueno">
+    <label for="bornes_bateria_bueno">Bueno</label><br>
+    <input type="radio" id="bornes_bateria_regular" name="bornes_bateria" value="regular">
+    <label for="bornes_bateria_regular">Regular</label><br>
+    <input type="radio" id="bornes_bateria_malo" name="bornes_bateria" value="malo">
+    <label for="bornes_bateria_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Ventilador:</label><br>
+    <input type="radio" id="ventilador_bueno" name="ventilador" value="bueno">
+    <label for="ventilador_bueno">Bueno</label><br>
+    <input type="radio" id="ventilador_regular" name="ventilador" value="regular">
+    <label for="ventilador_regular">Regular</label><br>
+    <input type="radio" id="ventilador_malo" name="ventilador" value="malo">
+    <label for="ventilador_malo">Malo</label><br>
+</div>
+
+            </div>
+              <div>
+                <label class="form-label" >Estado de Luces</label>
+             <div class="form-group">
+    <label class="form-check-label">Luces Altas:</label><br>
+    <input type="radio" id="luces_altas_bueno" name="altas" value="bueno">
+    <label for="luces_altas_bueno">Bueno</label><br>
+    <input type="radio" id="luces_altas_regular" name="altas" value="regular">
+    <label for="luces_altas_regular">Regular</label><br>
+    <input type="radio" id="luces_altas_malo" name="altas" value="malo">
+    <label for="luces_altas_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Luces Medias:</label><br>
+    <input type="radio" id="luces_medias_bueno" name="medias" value="bueno">
+    <label for="luces_medias_bueno">Bueno</label><br>
+    <input type="radio" id="luces_medias_regular" name="medias" value="regular">
+    <label for="luces_medias_regular">Regular</label><br>
+    <input type="radio" id="luces_medias_malo" name="medias" value="malo">
+    <label for="luces_medias_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Luces Bajas:</label><br>
+    <input type="radio" id="luces_bajas_bueno" name="bajas" value="bueno">
+    <label for="luces_bajas_bueno">Bueno</label><br>
+    <input type="radio" id="luces_bajas_regular" name="bajas" value="regular">
+    <label for="luces_bajas_regular">Regular</label><br>
+    <input type="radio" id="luces_bajas_malo" name="bajas" value="malo">
+    <label for="luces_bajas_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Direccional Izquierdo Delantero:</label><br>
+    <input type="radio" id="direccional_izquierdo_delantero_bueno" name="d_i_delantero" value="bueno">
+    <label for="direccional_izquierdo_delantero_bueno">Bueno</label><br>
+    <input type="radio" id="direccional_izquierdo_delantero_regular" name="d_i_delantero" value="regular">
+    <label for="direccional_izquierdo_delantero_regular">Regular</label><br>
+    <input type="radio" id="direccional_izquierdo_delantero_malo" name="d_i_delantero" value="malo">
+    <label for="direccional_izquierdo_delantero_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Direccional Derecho Delantero:</label><br>
+    <input type="radio" id="direccional_derecho_delantero_bueno" name="d_d_delantero" value="bueno">
+    <label for="direccional_derecho_delantero_bueno">Bueno</label><br>
+    <input type="radio" id="direccional_derecho_delantero_regular" name="d_d_delantero" value="regular">
+    <label for="direccional_derecho_delantero_regular">Regular</label><br>
+    <input type="radio" id="direccional_derecho_delantero_malo" name="d_d_delantero" value="malo">
+    <label for="direccional_derecho_delantero_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Direccional Izquierdo Trasero:</label><br>
+    <input type="radio" id="direccional_izquierdo_trasero_bueno" name="d_i_trasero" value="bueno">
+    <label for="direccional_izquierdo_trasero_bueno">Bueno</label><br>
+    <input type="radio" id="direccional_izquierdo_trasero_regular" name="d_i_trasero" value="regular">
+    <label for="direccional_izquierdo_trasero_regular">Regular</label><br>
+    <input type="radio" id="direccional_izquierdo_trasero_malo" name="d_i_trasero" value="malo">
+    <label for="direccional_izquierdo_trasero_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Direccional Derecho Trasero:</label><br>
+    <input type="radio" id="direccional_derecho_trasero_bueno" name="d_d_trasero" value="bueno">
+    <label for="direccional_derecho_trasero_bueno">Bueno</label><br>
+    <input type="radio" id="direccional_derecho_trasero_regular" name="d_d_trasero" value="regular">
+    <label for="direccional_derecho_trasero_regular">Regular</label><br>
+    <input type="radio" id="direccional_derecho_trasero_malo" name="d_d_trasero" value="malo">
+    <label for="direccional_derecho_trasero_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Luces De Parqueo:</label><br>
+    <input type="radio" id="luces_parqueo_bueno" name="parqueo" value="bueno">
+    <label for="luces_parqueo_bueno">Bueno</label><br>
+    <input type="radio" id="luces_parqueo_regular" name="parqueo" value="regular">
+    <label for="luces_parqueo_regular">Regular</label><br>
+    <input type="radio" id="luces_parqueo_malo" name="parqueo" value="malo">
+    <label for="luces_parqueo_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Luz Freno:</label><br>
+    <input type="radio" id="luz_freno_bueno" name="l_freno" value="bueno">
+    <label for="luz_freno_bueno">Bueno</label><br>
+    <input type="radio" id="luz_freno_regular" name="l_freno" value="regular">
+    <label for="luz_freno_regular">Regular</label><br>
+    <input type="radio" id="luz_freno_malo" name="l_freno" value="malo">
+    <label for="luz_freno_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Luz Reversa:</label><br>
+    <input type="radio" id="luz_reversa_bueno" name="l_reversa" value="bueno">
+    <label for="luz_reversa_bueno">Bueno</label><br>
+    <input type="radio" id="luz_reversa_regular" name="l_reversa" value="regular">
+    <label for="luz_reversa_regular">Regular</label><br>
+    <input type="radio" id="luz_reversa_malo" name="l_reversa" value="malo">
+    <label for="luz_reversa_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Luz Placa:</label><br>
+    <input type="radio" id="luz_placa_bueno" name="l_placa" value="bueno">
+    <label for="luz_placa_bueno">Bueno</label><br>
+    <input type="radio" id="luz_placa_regular" name="l_placa" value="regular">
+    <label for="luz_placa_regular">Regular</label><br>
+    <input type="radio" id="luz_placa_malo" name="l_placa" value="malo">
+    <label for="luz_placa_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Exploradoras:</label><br>
+    <input type="radio" id="exploradoras_bueno" name="exploradoras" value="bueno">
+    <label for="exploradoras_bueno">Bueno</label><br>
+    <input type="radio" id="exploradoras_regular" name="exploradoras" value="regular">
+    <label for="exploradoras_regular">Regular</label><br>
+    <input type="radio" id="exploradoras_malo" name="exploradoras" value="malo">
+    <label for="exploradoras_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Luz Baliza:</label><br>
+    <input type="radio" id="luz_baliza_bueno" name="l_baliza" value="bueno">
+    <label for="luz_baliza_bueno">Bueno</label><br>
+    <input type="radio" id="luz_baliza_regular" name="l_baliza" value="regular">
+    <label for="luz_baliza_regular">Regular</label><br>
+    <input type="radio" id="luz_baliza_malo" name="l_baliza" value="malo">
+    <label for="luz_baliza_malo">Malo</label><br>
+</div>
+
+              </div>
+              <div>
+                <label class="form-label" >Estado de Llantas</label>
+                <div class="form-group">
+    <label class="form-check-label">Delantera Izquierda:</label><br>
+    <input type="radio" id="delantera_izquierda_bueno" name="ll_i_delantero" value="bueno">
+    <label for="delantera_izquierda_bueno">Bueno</label><br>
+    <input type="radio" id="delantera_izquierda_regular" name="ll_i_delantero" value="regular">
+    <label for="delantera_izquierda_regular">Regular</label><br>
+    <input type="radio" id="delantera_izquierda_malo" name="ll_i_delantero" value="malo">
+    <label for="delantera_izquierda_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Delantera Derecha:</label><br>
+    <input type="radio" id="delantera_derecha_bueno" name="ll_d_delantero" value="bueno">
+    <label for="delantera_derecha_bueno">Bueno</label><br>
+    <input type="radio" id="delantera_derecha_regular" name="ll_d_delantero" value="regular">
+    <label for="delantera_derecha_regular">Regular</label><br>
+    <input type="radio" id="delantera_derecha_malo" name="ll_d_delantero" value="malo">
+    <label for="delantera_derecha_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Trasera Izquierda:</label><br>
+    <input type="radio" id="trasera_izquierda_bueno" name="ll_i_trasero" value="bueno">
+    <label for="trasera_izquierda_bueno">Bueno</label><br>
+    <input type="radio" id="trasera_izquierda_regular" name="ll_i_trasero" value="regular">
+    <label for="trasera_izquierda_regular">Regular</label><br>
+    <input type="radio" id="trasera_izquierda_malo" name="ll_i_trasero" value="malo">
+    <label for="trasera_izquierda_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Trasera Derecha:</label><br>
+    <input type="radio" id="trasera_derecha_bueno" name="ll_d_trasero" value="bueno">
+    <label for="trasera_derecha_bueno">Bueno</label><br>
+    <input type="radio" id="trasera_derecha_regular" name="ll_d_trasero" value="regular">
+    <label for="trasera_derecha_regular">Regular</label><br>
+    <input type="radio" id="trasera_derecha_malo" name="ll_d_trasero" value="malo">
+    <label for="trasera_derecha_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Repuesto:</label><br>
+    <input type="radio" id="repuesto_bueno" name="repuesto" value="bueno">
+    <label for="repuesto_bueno">Bueno</label><br>
+    <input type="radio" id="repuesto_regular" name="repuesto" value="regular">
+    <label for="repuesto_regular">Regular</label><br>
+    <input type="radio" id="repuesto_malo" name="repuesto" value="malo">
+    <label for="repuesto_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Presión Del Aire De Las Llantas:</label><br>
+    <input type="radio" id="presion_llantas_bueno" name="presion_llanta" value="bueno">
+    <label for="presion_llantas_bueno">Bueno</label><br>
+    <input type="radio" id="presion_llantas_regular" name="presion_llanta" value="regular">
+    <label for="presion_llantas_regular">Regular</label><br>
+    <input type="radio" id="presion_llantas_malo" name="presion_llanta" value="malo">
+    <label for="presion_llantas_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Rines:</label><br>
+    <input type="radio" id="rines_bueno" name="rines" value="bueno">
+    <label for="rines_bueno">Bueno</label><br>
+    <input type="radio" id="rines_regular" name="rines" value="regular">
+    <label for="rines_regular">Regular</label><br>
+    <input type="radio" id="rines_malo" name="rines" value="malo">
+    <label for="rines_malo">Malo</label><br>
+</div>
+
+              </div>
+            <div>
+              <label class="form-label" >Frenos</label>
+             <div class="form-group">
+    <label class="form-check-label">Estado De Los Frenos:</label><br>
+    <input type="radio" id="estado_frenos_bueno" name="e_frenos" value="bueno">
+    <label for="estado_frenos_bueno">Bueno</label><br>
+    <input type="radio" id="estado_frenos_regular" name="e_frenos" value="regular">
+    <label for="estado_frenos_regular">Regular</label><br>
+    <input type="radio" id="estado_frenos_malo" name="e_frenos" value="malo">
+    <label for="estado_frenos_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Freno De Mano:</label><br>
+    <input type="radio" id="freno_mano_bueno" name="freno_mano" value="bueno">
+    <label for="freno_mano_bueno">Bueno</label><br>
+    <input type="radio" id="freno_mano_regular" name="freno_mano" value="regular">
+    <label for="freno_mano_regular">Regular</label><br>
+    <input type="radio" id="freno_mano_malo" name="freno_mano" value="malo">
+    <label for="freno_mano_malo">Malo</label><br>
+</div>
+
+              </div>
+              <div>
+                <label class="form-label" >Equipo de Carretera</label>
+         <div class="form-group">
+    <label class="form-check-label">Gato Con Capacidad De Levantar El Vehiculo:</label><br>
+    <input type="radio" id="gato_bueno" name="gato" value="bueno">
+    <label for="gato_bueno">Bueno</label><br>
+    <input type="radio" id="gato_regular" name="gato" value="regular">
+    <label for="gato_regular">Regular</label><br>
+    <input type="radio" id="gato_malo" name="gato" value="malo">
+    <label for="gato_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Chaleco Reflectivo:</label><br>
+    <input type="radio" id="chaleco_bueno" name="chaleco" value="bueno">
+    <label for="chaleco_bueno">Bueno</label><br>
+    <input type="radio" id="chaleco_regular" name="chaleco" value="regular">
+    <label for="chaleco_regular">Regular</label><br>
+    <input type="radio" id="chaleco_malo" name="chaleco" value="malo">
+    <label for="chaleco_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">2 Latas Tacos Para Bloquear El Vehiculo:</label><br>
+    <input type="radio" id="tacos_bueno" name="tacos" value="bueno">
+    <label for="tacos_bueno">Bueno</label><br>
+    <input type="radio" id="tacos_regular" name="tacos" value="regular">
+    <label for="tacos_regular">Regular</label><br>
+    <input type="radio" id="tacos_malo" name="tacos" value="malo">
+    <label for="tacos_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">2 Conos Plasticos Reflectivos:</label><br>
+    <input type="radio" id="conos_bueno" name="conos" value="bueno">
+    <label for="conos_bueno">Bueno</label><br>
+    <input type="radio" id="conos_regular" name="conos" value="regular">
+    <label for="conos_regular">Regular</label><br>
+    <input type="radio" id="conos_malo" name="conos" value="malo">
+    <label for="conos_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">1 Par De Guantes De Trabajo En Lona:</label><br>
+    <input type="radio" id="guantes_bueno" name="guantes" value="bueno">
+    <label for="guantes_bueno">Bueno</label><br>
+    <input type="radio" id="guantes_regular" name="guantes" value="regular">
+    <label for="guantes_regular">Regular</label><br>
+    <input type="radio" id="guantes_malo" name="guantes" value="malo">
+    <label for="guantes_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Cruceta:</label><br>
+    <input type="radio" id="cruceta_bueno" name="cruceta" value="bueno">
+    <label for="cruceta_bueno">Bueno</label><br>
+    <input type="radio" id="cruceta_regular" name="cruceta" value="regular">
+    <label for="cruceta_regular">Regular</label><br>
+    <input type="radio" id="cruceta_malo" name="cruceta" value="malo">
+    <label for="cruceta_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">1 Kit De Cable De Iniciar:</label><br>
+    <input type="radio" id="cable_bueno" name="cable" value="bueno">
+    <label for="cable_bueno">Bueno</label><br>
+    <input type="radio" id="cable_regular" name="cable" value="regular">
+    <label for="cable_regular">Regular</label><br>
+    <input type="radio" id="cable_malo" name="cable" value="malo">
+    <label for="cable_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">2 Extintores De Fuego:</label><br>
+    <input type="radio" id="extintores_bueno" name="extintores" value="bueno">
+    <label for="extintores_bueno">Bueno</label><br>
+    <input type="radio" id="extintores_regular" name="extintores" value="regular">
+    <label for="extintores_regular">Regular</label><br>
+    <input type="radio" id="extintores_malo" name="extintores" value="malo">
+    <label for="extintores_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">1 Linterna De Mano Con Pilas:</label><br>
+    <input type="radio" id="linterna_pilas_bueno" name="linterna" value="bueno">
+    <label for="linterna_pilas_bueno">Bueno</label><br>
+    <input type="radio" id="linterna_pilas_regular" name="linterna" value="regular">
+    <label for="linterna_pilas_regular">Regular</label><br>
+    <input type="radio" id="linterna_pilas_malo" name="linterna" value="malo">
+    <label for="linterna_pilas_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">1 Linterna Con Adaptador Al Encendedor De Cigarros O Toma Corriente De 12v O 110v:</label><br>
+    <input type="radio" id="linterna_encendedor_bueno" name="encendedor" value="bueno">
+    <label for="linterna_encendedor_bueno">Bueno</label><br>
+    <input type="radio" id="linterna_encendedor_regular" name="encendedor" value="regular">
+    <label for="linterna_encendedor_regular">Regular</label><br>
+    <input type="radio" id="linterna_encendedor_malo" name="encendedor" value="malo">
+    <label for="linterna_encendedor_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Caja De Fusibles Surtidos:</label><br>
+    <input type="radio" id="fusibles_bueno" name="fusibles" value="bueno">
+    <label for="fusibles_bueno">Bueno</label><br>
+    <input type="radio" id="fusibles_regular" name="fusibles" value="regular">
+    <label for="fusibles_regular">Regular</label><br>
+    <input type="radio" id="fusibles_malo" name="fusibles" value="malo">
+    <label for="fusibles_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Bombillo De Repuesto De Diferentes Filamentos Para Las Luces Laterales:</label><br>
+    <input type="radio" id="bombillo_bueno" name="bombillo" value="bueno">
+    <label for="bombillo_bueno">Bueno</label><br>
+    <input type="radio" id="bombillo_regular" name="bombillo" value="regular">
+    <label for="bombillo_regular">Regular</label><br>
+    <input type="radio" id="bombillo_malo" name="bombillo" value="malo">
+    <label for="bombillo_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">1 Cuerda Estatica De 30m; Diametro 12.3mm Con Gancho De Atracción:</label><br>
+    <input type="radio" id="cuerda_bueno" name="cuerda" value="bueno">
+    <label for="cuerda_bueno">Bueno</label><br>
+    <input type="radio" id="cuerda_regular" name="cuerda" value="regular">
+    <label for="cuerda_regular">Regular</label><br>
+    <input type="radio" id="cuerda_malo" name="cuerda" value="malo">
+    <label for="cuerda_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Kit Inmovilizadores Para Extremidades De Escalerilla Metalico:</label><br>
+    <input type="radio" id="inmovilizadores_bueno" name="inmovilizadores" value="bueno">
+    <label for="inmovilizadores_bueno">Bueno</label><br>
+    <input type="radio" id="inmovilizadores_regular" name="inmovilizadores" value="regular">
+    <label for="inmovilizadores_regular">Regular</label><br>
+    <input type="radio" id="inmovilizadores_malo" name="inmovilizadores" value="malo">
+    <label for="inmovilizadores_malo">Malo</label><br>
+</div>
+
+
+              </div>
+              <div>
+                <label class="form-label" >Herramientas</label>
+                <div class="form-group">
+    <label class="form-check-label">Alicate:</label><br>
+    <input type="radio" id="alicate_bueno" name="alicate" value="bueno">
+    <label for="alicate_bueno">Bueno</label><br>
+    <input type="radio" id="alicate_regular" name="alicate" value="regular">
+    <label for="alicate_regular">Regular</label><br>
+    <input type="radio" id="alicate_malo" name="alicate" value="malo">
+    <label for="alicate_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Destornillador Pala (1 Pequeño, 1 Grande):</label><br>
+    <input type="radio" id="destornillador_pala_bueno" name="destornillador" value="bueno">
+    <label for="destornillador_pala_bueno">Bueno</label><br>
+    <input type="radio" id="destornillador_pala_regular" name="destornillador" value="regular">
+    <label for="destornillador_pala_regular">Regular</label><br>
+    <input type="radio" id="destornillador_pala_malo" name="destornillador" value="malo">
+    <label for="destornillador_pala_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">1 Llave De Expansión:</label><br>
+    <input type="radio" id="llave_expansion_bueno" name="llave" value="bueno">
+    <label for="llave_expansion_bueno">Bueno</label><br>
+    <input type="radio" id="llave_expansion_regular" name="llave" value="regular">
+    <label for="llave_expansion_regular">Regular</label><br>
+    <input type="radio" id="llave_expansion_malo" name="llave" value="malo">
+    <label for="llave_expansion_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Juego De Llaves (1/2) (10-11-12-13-14):</label><br>
+    <input type="radio" id="juego_llaves_bueno" name="juego_llaves" value="bueno">
+    <label for="juego_llaves_bueno">Bueno</label><br>
+    <input type="radio" id="juego_llaves_regular" name="juego_llaves" value="regular">
+    <label for="juego_llaves_regular">Regular</label><br>
+    <input type="radio" id="juego_llaves_malo" name="juego_llaves" value="malo">
+    <label for="juego_llaves_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">1 Martillo:</label><br>
+    <input type="radio" id="martillo_bueno" name="martillo" value="bueno">
+    <label for="martillo_bueno">Bueno</label><br>
+    <input type="radio" id="martillo_regular" name="martillo" value="regular">
+    <label for="martillo_regular">Regular</label><br>
+    <input type="radio" id="martillo_malo" name="martillo" value="malo">
+    <label for="martillo_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">1 Patecabra:</label><br>
+    <input type="radio" id="patecabra_bueno" name="patecabra" value="bueno">
+    <label for="patecabra_bueno">Bueno</label><br>
+    <input type="radio" id="patecabra_regular" name="patecabra" value="regular">
+    <label for="patecabra_regular">Regular</label><br>
+    <input type="radio" id="patecabra_malo" name="patecabra" value="malo">
+    <label for="patecabra_malo">Malo</label><br>
+</div>
+
+
+              </div>
+              <div>
+                <label class="form-label" >Dotación</label>
+              <div class="form-group">
+    <label class="form-check-label">Cilindro Oxigeno Portátil Con Manómetro:</label><br>
+    <input type="radio" id="cilindro_oxigeno_portatil_bueno" name="cilindro" value="bueno">
+    <label for="cilindro_oxigeno_portatil_bueno">Bueno</label><br>
+    <input type="radio" id="cilindro_oxigeno_portatil_regular" name="cilindro" value="regular">
+    <label for="cilindro_oxigeno_portatil_regular">Regular</label><br>
+    <input type="radio" id="cilindro_oxigeno_portatil_malo" name="cilindro" value="malo">
+    <label for="cilindro_oxigeno_portatil_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Cilindro Oxigeno Central:</label><br>
+    <input type="radio" id="cilindro_oxigeno_central_bueno" name="cilindro_portal" value="bueno">
+    <label for="cilindro_oxigeno_central_bueno">Bueno</label><br>
+    <input type="radio" id="cilindro_oxigeno_central_regular" name="cilindro_portal" value="regular">
+    <label for="cilindro_oxigeno_central_regular">Regular</label><br>
+    <input type="radio" id="cilindro_oxigeno_central_malo" name="cilindro_portal" value="malo">
+    <label for="cilindro_oxigeno_central_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">1 Camilla Principal Con Sistema De Anclaje Y Cinturones De Seguridad:</label><br>
+    <input type="radio" id="camilla_principal_bueno" name="camilla" value="bueno">
+    <label for="camilla_principal_bueno">Bueno</label><br>
+    <input type="radio" id="camilla_principal_regular" name="camilla" value="regular">
+    <label for="camilla_principal_regular">Regular</label><br>
+    <input type="radio" id="camilla_principal_malo" name="camilla" value="malo">
+    <label for="camilla_principal_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">1 Camilla Tipo Plegable De Lona:</label><br>
+    <input type="radio" id="camilla_plegable_bueno" name="camilla_tipo" value="bueno">
+    <label for="camilla_plegable_bueno">Bueno</label><br>
+    <input type="radio" id="camilla_plegable_regular" name="camilla_tipo" value="regular">
+    <label for="camilla_plegable_regular">Regular</label><br>
+    <input type="radio" id="camilla_plegable_malo" name="camilla_tipo" value="malo">
+    <label for="camilla_plegable_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">1 Camilla Secundaria Para Inmovilización Espinal Y Correas Para Asegurar El Paciente:</label><br>
+    <input type="radio" id="camilla_secundaria_bueno" name="camilla_2" value="bueno">
+    <label for="camilla_secundaria_bueno">Bueno</label><br>
+    <input type="radio" id="camilla_secundaria_regular" name="camilla_2" value="regular">
+    <label for="camilla_secundaria_regular">Regular</label><br>
+    <input type="radio" id="camilla_secundaria_malo" name="camilla_2" value="malo">
+    <label for="camilla_secundaria_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Tabla Espinal Corta O Chaleco De Extracción Vehicular:</label><br>
+    <input type="radio" id="tabla_espinal_bueno" name="tabla" value="bueno">
+    <label for="tabla_espinal_bueno">Bueno</label><br>
+    <input type="radio" id="tabla_espinal_regular" name="tabla" value="regular">
+    <label for="tabla_espinal_regular">Regular</label><br>
+    <input type="radio" id="tabla_espinal_malo" name="tabla" value="malo">
+    <label for="tabla_espinal_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Silla De Ruedas:</label><br>
+    <input type="radio" id="silla_ruedas_bueno" name="silla" value="bueno">
+    <label for="silla_ruedas_bueno">Bueno</label><br>
+    <input type="radio" id="silla_ruedas_regular" name="silla" value="regular">
+    <label for="silla_ruedas_regular">Regular</label><br>
+    <input type="radio" id="silla_ruedas_malo" name="silla" value="malo">
+    <label for="silla_ruedas_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Balas De Oxígeno:</label><br>
+    <input type="radio" id="balas_oxigeno_bueno" name="balas" value="bueno">
+    <label for="balas_oxigeno_bueno">Bueno</label><br>
+    <input type="radio" id="balas_oxigeno_regular" name="balas" value="regular">
+    <label for="balas_oxigeno_regular">Regular</label><br>
+    <input type="radio" id="balas_oxigeno_malo" name="balas" value="malo">
+    <label for="balas_oxigeno_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Tabla Rígida:</label><br>
+    <input type="radio" id="tabla_rigida_bueno" name="tabla_rigida" value="bueno">
+    <label for="tabla_rigida_bueno">Bueno</label><br>
+    <input type="radio" id="tabla_rigida_regular" name="tabla_rigida" value="regular">
+    <label for="tabla_rigida_regular">Regular</label><br>
+    <input type="radio" id="tabla_rigida_malo" name="tabla_rigida" value="malo">
+    <label for="tabla_rigida_malo">Malo</label><br>
+</div>
+
+
+              </div>
+              <div>
+                <label class="form-label" >Limpieza y Desinfección Covid-19</label>
+               <div class="form-group">
+    <label class="form-check-label">La Móvil Se Encuentra Optimizada En Limpieza Y Desinfección Por El Covid-19:</label><br>
+    <input type="radio" id="limpieza_bueno" name="limpieza" value="bueno">
+    <label for="limpieza_bueno">Bueno</label><br>
+    <input type="radio" id="limpieza_regular" name="limpieza" value="regular">
+    <label for="limpieza_regular">Regular</label><br>
+    <input type="radio" id="limpieza_malo" name="limpieza" value="malo">
+    <label for="limpieza_malo">Malo</label><br>
+</div>
+
+
+              </div>
+              <div>
+                <label class="form-label" >Otros</label>
+          <div class="form-group">
+    <label class="form-check-label">Instalaciones Electricas:</label><br>
+    <input type="radio" id="instalaciones_electricas_bueno" name="instalacion" value="bueno">
+    <label for="instalaciones_electricas_bueno">Bueno</label><br>
+    <input type="radio" id="instalaciones_electricas_regular" name="instalacion" value="regular">
+    <label for="instalaciones_electricas_regular">Regular</label><br>
+    <input type="radio" id="instalaciones_electricas_malo" name="instalacion" value="malo">
+    <label for="instalaciones_electricas_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Clutch:</label><br>
+    <input type="radio" id="clutch_bueno" name="clutch" value="bueno">
+    <label for="clutch_bueno">Bueno</label><br>
+    <input type="radio" id="clutch_regular" name="clutch" value="regular">
+    <label for="clutch_regular">Regular</label><br>
+    <input type="radio" id="clutch_malo" name="clutch" value="malo">
+    <label for="clutch_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Exosto:</label><br>
+    <input type="radio" id="exosto_bueno" name="exosto" value="bueno">
+    <label for="exosto_bueno">Bueno</label><br>
+    <input type="radio" id="exosto_regular" name="exosto" value="regular">
+    <label for="exosto_regular">Regular</label><br>
+    <input type="radio" id="exosto_malo" name="exosto" value="malo">
+    <label for="exosto_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Alarma Sonora De Reversa:</label><br>
+    <input type="radio" id="alarma_sonora_reversa_bueno" name="alarma" value="bueno">
+    <label for="alarma_sonora_reversa_bueno">Bueno</label><br>
+    <input type="radio" id="alarma_sonora_reversa_regular" name="alarma" value="regular">
+    <label for="alarma_sonora_reversa_regular">Regular</label><br>
+    <input type="radio" id="alarma_sonora_reversa_malo" name="alarma" value="malo">
+    <label for="alarma_sonora_reversa_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Tapa De Aceite:</label><br>
+    <input type="radio" id="tapa_aceite_bueno" name="tapa" value="bueno">
+    <label for="tapa_aceite_bueno">Bueno</label><br>
+    <input type="radio" id="tapa_aceite_regular" name="tapa" value="regular">
+    <label for="tapa_aceite_regular">Regular</label><br>
+    <input type="radio" id="tapa_aceite_malo" name="tapa" value="malo">
+    <label for="tapa_aceite_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Salto De Cambios:</label><br>
+    <input type="radio" id="salto_cambios_bueno" name="salto" value="bueno">
+    <label for="salto_cambios_bueno">Bueno</label><br>
+    <input type="radio" id="salto_cambios_regular" name="salto" value="regular">
+    <label for="salto_cambios_regular">Regular</label><br>
+    <input type="radio" id="salto_cambios_malo" name="salto" value="malo">
+    <label for="salto_cambios_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Cambios Suaves:</label><br>
+    <input type="radio" id="cambios_suaves_bueno" name="cambios" value="bueno">
+    <label for="cambios_suaves_bueno">Bueno</label><br>
+    <input type="radio" id="cambios_suaves_regular" name="cambios" value="regular">
+    <label for="cambios_suaves_regular">Regular</label><br>
+    <input type="radio" id="cambios_suaves_malo" name="cambios" value="malo">
+    <label for="cambios_suaves_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Guaya Del Acelerador:</label><br>
+    <input type="radio" id="guaya_acelerador_bueno" name="guaya" value="bueno">
+    <label for="guaya_acelerador_bueno">Bueno</label><br>
+    <input type="radio" id="guaya_acelerador_regular" name="guaya" value="regular">
+    <label for="guaya_acelerador_regular">Regular</label><br>
+    <input type="radio" id="guaya_acelerador_malo" name="guaya" value="malo">
+    <label for="guaya_acelerador_malo">Malo</label><br>
+</div>
+<div class="form-group">
+    <label class="form-check-label">Sistema De Embrague:</label><br>
+    <input type="radio" id="sistema_embrague_bueno" name="embrague" value="bueno">
+    <label for="sistema_embrague_bueno">Bueno</label><br>
+    <input type="radio" id="sistema_embrague_regular" name="embrague" value="regular">
+    <label for="sistema_embrague_regular">Regular</label><br>
+    <input type="radio" id="sistema_embrague_malo" name="embrague" value="malo">
+    <label for="sistema_embrague_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Encendido:</label><br>
+    <input type="radio" id="encendido_bueno" name="encendido" value="bueno">
+    <label for="encendido_bueno">Bueno</label><br>
+    <input type="radio" id="encendido_regular" name="encendido" value="regular">
+    <label for="encendido_regular">Regular</label><br>
+    <input type="radio" id="encendido_malo" name="encendido" value="malo">
+    <label for="encendido_malo">Malo</label><br>
+</div>
+
+<div class="form-group">
+    <label class="form-check-label">Tapa De Tanque De Gasolina O ACPM:</label><br>
+    <input type="radio" id="tapa_tanque_bueno" name="tanque" value="bueno">
+    <label for="tapa_tanque_bueno">Bueno</label><br>
+    <input type="radio" id="tapa_tanque_regular" name="tanque" value="regular">
+    <label for="tapa_tanque_regular">Regular</label><br>
+    <input type="radio" id="tapa_tanque_malo" name="tanque" value="malo">
+    <label for="tapa_tanque_malo">Malo</label><br>
+</div>
+
+
+              </div>
+              <div class="mb-3">
+                <label for="detalle" class="form-label">observaciones:</label>
+                <input
+                    type="text"
+                    class="form-control"
+                   
+                    name="observaciones"
+                    required
+                />
+            </div>
+          <script>
+            // Muestra el formulario automáticamente al cargar la página
+            window.onload = function () {
+              var formulario = document.getElementById("formulario");
+              formulario.style.display = "block";
+            };
+          </script>
+          
+
+         
+          <script>
+            function checkOtros(select) {
+              var otrosInput = document.getElementById("otrosInput");
+              if (select.value === "otros") {
+                otrosInput.style.display = "block";
+              } else {
+                otrosInput.style.display = "none";
+              }
+            }
+          </script>
+
+          
+          
+
+          
+
+          <button class="btn btn-info my-4" type="submit" style="background-color:A2BDCB">Procesar formulario</button>
+
+          <!--<button
+          type="button"
+          class="btn btn-primary btn-generar-pdf"
+          onclick="generarPDF()"
+        >
+          generar PDF------------------------------------------------->
+            </div>
+          </div>
+        </form>
+          
+      </div>
+    </nav>
+    
+
+
+
+  </body>
+</html>

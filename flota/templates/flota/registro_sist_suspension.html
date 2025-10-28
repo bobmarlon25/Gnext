@@ -1,0 +1,419 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>
+      // Función para manejar el evento beforeunload
+      function handleBeforeUnload(event) {
+        // Borrar el indicador isLoggedIn del almacenamiento local
+        localStorage.removeItem("isLoggedIn");
+      }
+
+      // Agregar el listener para el evento beforeunload
+      window.addEventListener("beforeunload", handleBeforeUnload);
+    </script>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Regist. mantenimiento</title>
+    <!-- Enlaza el favicon -->
+    <link
+      rel="icon"
+      href="https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/4a3871b1-5e96-429f-8046-85bdb422b44e.image.png?v=1708646250765"
+      type="image/png"
+    />
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Estilos adicionales -->
+    <style>
+      body {
+        font-family: "Signika Negative", sans-serif;
+         background-image: url("https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/rm222batch2-mind-03.jpg?v=1716839040735");
+        background-size: cover;
+        background-repeat: no-repeat;
+        margin: 0;
+        height: 100vh; /* 100% de la altura de la ventana */
+        width: 100vw; /* 100% del ancho de la ventana */
+        background-attachment: fixed;
+      }
+      .container {
+        max-width: auto;
+      }
+    </style>
+  </head>
+ <body style="overflow-y: auto">
+    <!-- BARRA DE NAVEGACION -->
+    <nav
+      class="navbar navbar-expand-lg navbar-dark bg-primary"
+      style="
+        background-image: url('https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/abstract-luxury-gradient-blue-background-smooth-dark-blue-with-black-vignette-studio-banner.jpg?v=1712618457076');
+        background-size: cover;
+      "
+    >
+      <div class="container-fluid">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <div class="navbar-nav me-auto">
+            <span class="nav-link"
+              >Bienvenido, {{request.user.first_name|default:request.user.username }}</span
+            >
+            <a
+              class="nav-link active"
+              aria-current="page"
+              href="/flota/registrar"
+              >Inicio</a
+            >
+
+            <a
+              id="ambulanceLink"
+              class="nav-link"
+              href="/flota/historial_tanqueo/{{ambulancia.id}}"
+              >Hist. De Tanqueo</a
+            >
+
+            <a id="menuLink" class="nav-link" href="#"
+              >Hist. De Mantenimiento</a
+            >
+            <a id="menuLink2" class="nav-link" href="#">Hist. Preoperacional</a>
+          </div>
+          <!-- Sección para mostrar el nombre de usuario -->
+          <div class="navbar-nav">
+            <!-- Agrega un botón para cerrar sesión -->
+            <a class="nav-link" href="{% url 'logout' %}">Cerrar sesión</a>
+          </div>
+          <!-- Botón para cambiar la contraseña -->
+          <button
+            class="nav-link navbar-nav"
+            data-bs-toggle="modal"
+            data-bs-target="#crearMantenimientoModal"
+          >
+            Cambiar contraseña
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!--MENU Y BARRA DE NAVEGACIOPN---->
+
+    <!---script tabla columna--------------------------------->
+    <script>
+      function showAmbulanceDescription(ambulance) {
+        var allDescriptions = document.querySelectorAll(
+          ".ambulance-description"
+        );
+        allDescriptions.forEach(function (description) {
+          description.style.display = "none";
+        });
+
+        var descriptionToShow = document.getElementById(
+          "ambulance-description-" + ambulance
+        );
+        if (descriptionToShow) {
+          descriptionToShow.style.display = "block";
+        }
+      }
+    </script>
+    <script>
+      // JavaScript para mostrar u ocultar el menú lateral al hacer clic en el botón de menú
+      document
+        .getElementById("menu-toggle")
+        .addEventListener("click", function () {
+          var sidebar = document.getElementById("sidebar");
+          sidebar.classList.toggle("active"); // Alternar la clase 'active' para mostrar u ocultar el menú
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!--  <script>
+      // Verificar si el usuario ha iniciado sesión
+      var isLoggedIn = localStorage.getItem("isLoggedIn");
+
+      // Si el usuario no ha iniciado sesión, redirigirlo a la página de inicio de sesión
+      if (!isLoggedIn) {
+        window.location.href = "usuario.html";
+      }
+    </script>------------------>
+    <nav
+      class="navbar bg-secondary text-dark bg-opacity-25"
+      data-bs-theme="light"
+    >
+      <div class="container mt-5">
+        <h2 class="text-center">Mantenimiento en Suspensión</h2>
+        <!--<img src="https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/mantenimiento.gif?v=1714331847849" alt="Descripción de la imagen" class="img-fluid mx-auto d-block mt-3" style="max-width: 10%;" />-->
+        <form
+          class="form-inline"
+          id="formulario-mantenimiento"
+          action="{% url 'G_sist_suspension' movil.id %}"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="fecha" class="form-label">Fecha:</label>
+            <input type="date" class="form-control" id="fecha" name="fecha" required />
+        </div>
+          <div class="mb-3">
+            <label for="parte_reparar" class="form-label"
+              >Parte a Reparar:</label
+            >
+            <select
+              class="form-select"
+              id="parte_reparar"
+              name="motor"
+              required
+              onchange="mostrarContenidoAdicional()"
+            >
+              <option value="">Seleccione una opción</option>
+              <option value="suspension_delantera">Suspensión delantera</option>
+              <option value="suspension_trasera">Suspensión trasera</option>
+              <option value="direccion_hidraulica">Dirección</option>
+              <option value="otro">Otro</option>
+            </select>
+          </div>
+
+          <div class="mb-3" id="contenidoAdicional" style="display: none">
+            <!-- Aquí puedes agregar el contenido adicional que deseas mostrar cuando se selecciona "Otro" -->
+            <label for="otroInput" class="form-label">Especifique:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="otroInput"
+              name="Parte del Motor:"
+            />
+          </div>
+
+          <div class="mb-3" id="listaSuspensionDelantera" style="display: none">
+            <label for="tipoSuspensionDelantera" class="form-label"
+              >Tipo de repuesto:</label
+            >
+            <select
+              class="form-select"
+              id="tipoSuspensionDelantera"
+              name="Parte del Motor:"
+              required
+            >
+              <option value="">Seleccione una opción</option>
+              <option value="amortiguadores">Amortiguadores</option>
+              <option value="muelles">Muelles</option>
+              <option value="brazos_control">Brazos de control</option>
+              <option value="rotulas">Rótulas</option>
+            </select>
+          </div>
+
+          <div class="mb-3" id="listaSuspensionTrasera" style="display: none">
+            <label for="tipoSuspensionTrasera" class="form-label"
+              >Tipo de repuesto:</label
+            >
+            <select
+              class="form-select"
+              id="tipoSuspensionTrasera"
+              name="Parte del Motor:"
+              required
+            >
+              <option value="">Seleccione una opción</option>
+              <option value="amortiguadores2">Amortiguadores</option>
+              <option value="muelles2">Muelles</option>
+              <option value="brazos_control2">Brazos de control</option>
+              <option value="rotulas2">Rótulas</option>
+            </select>
+          </div>
+
+          <div class="mb-3" id="listaSistemaHidraulico" style="display: none">
+            <label for="tipoSistemaHidraulico" class="form-label"
+              >Tipo de repuesto:</label
+            >
+            <select
+              class="form-select"
+              id="tipoSistemaHidraulico"
+              name="Parte del Motor:"
+              required
+            >
+              <option value="">Seleccione una opción</option>
+              <option value="cremallera_direccion">
+                Cremallera de dirección
+              </option>
+              <option value="columna_direccion">Columna de dirección</option>
+              <option value="bomba_direccion">
+                Bomba de dirección asistida
+              </option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="detalle" class="form-label">Repuesto:</label>
+            <input
+                type="text"
+                class="form-control"
+                id="detalle"
+                name="detalle"
+                required
+            />
+        </div>
+        <div class="mb-3">
+            <label for="lugar" class="form-label">Lugar donde se Realizó el Mantenimiento:</label>
+            <input
+                type="text"
+                class="form-control"
+                id="lugar"
+                name="lugar"
+                required
+            />
+        </div>
+        <div class="mb-3">
+            <label for="costo" class="form-label">Costo del Mantenimiento:</label>
+            <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="text" class="form-control" id="costo" name="costo" required />
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="kilometraje" class="form-label">Kilometraje del Mantenimiento:</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="kilometraje" name="kilometraje" required />
+                <span class="input-group-text">km</span>
+            </div>
+        </div>
+        <div class="mb-3">
+          <label for="kilometraje" class="form-label">Nùmero de factura:</label>
+          <div class="input-group">
+            <span class="input-group-text">#</span>
+              <input type="text" class="form-control" id="kilometraje" name="numero_factura" required />
+             
+          </div>
+      </div>
+      <script>
+        // Muestra el formulario automáticamente al cargar la página
+        window.onload = function () {
+          var formulario = document.getElementById("formulario");
+          formulario.style.display = "block";
+        };
+      </script>
+      
+
+     
+      <script>
+        function checkOtros(select) {
+          var otrosInput = document.getElementById("otrosInput");
+          if (select.value === "otros") {
+            otrosInput.style.display = "block";
+          } else {
+            otrosInput.style.display = "none";
+          }
+        }
+      </script>
+
+      
+      
+
+      <div class="mb-3">
+        <label for="adjuntarImagen2" class="form-label" 
+          >Adjuntar imagen de Comprobante:</label
+        >
+        <input
+          name="foto_factura"
+          type="file"
+          class="form-control"
+          id="adjuntarImagen2"
+          accept="image/*"
+          required
+          name="foto_factura"
+        />
+      </div>
+      
+
+      <button class="btn btn-info my-4" type="submit" style="background-color:063D7A">Procesar formulario</button>
+
+
+          <!--<button
+          type="button"
+          class="btn btn-primary btn-generar-pdf"
+          onclick="generarPDF()"
+        >
+          generar PDF------------------------------------------------->
+        </form>
+      </div>
+    </nav>
+    <script>
+      function mostrarContenidoAdicional() {
+          var seleccion = document.getElementById("parte_reparar").value;
+          var contenidoAdicional = document.getElementById("contenidoAdicional");
+          var listaSuspensionDelantera = document.getElementById("listaSuspensionDelantera");
+          var listaSuspensionTrasera = document.getElementById("listaSuspensionTrasera");
+          var listaSistemaHidraulico = document.getElementById("listaSistemaHidraulico");
+      
+          // Ocultar todos los elementos adicionales
+          contenidoAdicional.style.display = "none";
+          contenidoAdicional.querySelectorAll('input, select').forEach(function(element) {
+              element.disabled = true;
+          });
+          listaSuspensionDelantera.style.display = "none";
+          listaSuspensionDelantera.querySelectorAll('input, select').forEach(function(element) {
+              element.disabled = true;
+          });
+          listaSuspensionTrasera.style.display = "none";
+          listaSuspensionTrasera.querySelectorAll('input, select').forEach(function(element) {
+              element.disabled = true;
+          });
+          listaSistemaHidraulico.style.display = "none";
+          listaSistemaHidraulico.querySelectorAll('input, select').forEach(function(element) {
+              element.disabled = true;
+          });
+      
+          // Mostrar el contenido adicional correspondiente según la selección
+          switch (seleccion) {
+              case "otro":
+                  contenidoAdicional.style.display = "block";
+                  contenidoAdicional.querySelectorAll('input, select').forEach(function(element) {
+                      element.disabled = false;
+                  });
+                  break;
+              case "suspension_delantera":
+                  listaSuspensionDelantera.style.display = "block";
+                  listaSuspensionDelantera.querySelectorAll('input, select').forEach(function(element) {
+                      element.disabled = false;
+                  });
+                  break;
+              case "suspension_trasera":
+                  listaSuspensionTrasera.style.display = "block";
+                  listaSuspensionTrasera.querySelectorAll('input, select').forEach(function(element) {
+                      element.disabled = false;
+                  });
+                  break;
+              case "direccion_hidraulica":
+                  listaSistemaHidraulico.style.display = "block";
+                  listaSistemaHidraulico.querySelectorAll('input, select').forEach(function(element) {
+                      element.disabled = false;
+                  });
+                  break;
+              default:
+                  break;
+          }
+      }
+      </script>
+      
+      
+
+  
+  </body>
+</html>
