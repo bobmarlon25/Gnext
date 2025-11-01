@@ -2,7 +2,7 @@ from django.contrib import admin
 
 
 
-from .models import Registros,Ambulancia
+from .models import Registros,Ambulancia,Cliente
 
 
 
@@ -16,5 +16,6 @@ class AmbulnciaAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Registros)
+admin.site.register(Cliente)
 
  

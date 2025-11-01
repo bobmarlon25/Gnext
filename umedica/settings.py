@@ -89,11 +89,11 @@ WSGI_APPLICATION = 'umedica.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE':'django.db.backends.postgresql_psycopg2',
-        'NAME': 'db_umedica',
-        'USER': 'postgres',
-        'PASSWORD': 'Mjpp3142159888',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'NAME': config('POSTGRESQL_ADDON_DB'),
+        'USER': config('POSTGRESQL_ADDON_USER'),
+        'PASSWORD': config('POSTGRESQL_ADDON_PASSWORD'),
+        'HOST': config('POSTGRESQL_ADDON_HOST'),
+        'PORT': config('POSTGRESQL_ADDON_PORT', default='5432')
     }
 }
 
