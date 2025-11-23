@@ -1,0 +1,565 @@
+body {
+  margin: 0em;
+  font-family: "Noto Sans", sans-serif;
+}
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: "Fjalla One", sans-serif;
+}
+/* viñetas */
+.circle-list {
+  font-size: 1.2em; /* Aumenta el tamaño del texto de la lista */
+}
+
+.circle-list li {
+  list-style-type: none; /* Elimina las viñetas predeterminadas */
+  position: relative; /* Posición relativa para que podamos posicionar la marca de verificación */
+  padding-left: 1.5em; /* Añade espacio a la izquierda para la marca de verificación */
+}
+
+.circle-list li::before {
+  content: ""; /* Añade contenido antes de cada elemento de la lista */
+  position: absolute; /* Posición absoluta para que se coloque correctamente */
+  top: 0.2em; /* Ajusta la posición vertical de la marca de verificación */
+  left: 0; /* La marca de verificación estará pegada al borde izquierdo */
+  width: 1em; /* Ancho del círculo */
+  height: 1em; /* Altura del círculo */
+  border-radius: 50%; /* Hace que el círculo tenga bordes redondeados */
+  background-color: white; /* Color del círculo */
+}
+
+.circle-list li::after {
+  content: "\2713"; /* Código Unicode para la marca de verificación */
+  position: absolute; /* Posición absoluta para que se coloque correctamente */
+  top: 0.2em; /* Ajusta la posición vertical de la marca de verificación */
+  left: 0.2em; /* Ajusta la posición horizontal de la marca de verificación */
+  font-size: 0.8em; /* Tamaño de la marca de verificación */
+  color: green; /* Color de la marca de verificación */
+}
+
+/*-----------------------------------*/
+
+.spaced-label {
+  margin-left: 10px; /* Ajusta el valor según lo que necesites */
+}
+
+.cover {
+  height: 800px;
+  
+  background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 1)), url(https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/ambulance-2554653_1280.jpg?v=1708977417263);
+  color: #007bff;
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: darken;
+  margin-top: 170px;
+}
+
+.cover1 {
+  height: 200px;
+  
+  background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 1)), url(https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/_bab654e4-6ef2-4e6c-9e66-2d5210f91816.jpeg?v=1708641591164);
+  color: #007bff;
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: darken;
+
+}
+.cover2 {
+  height: 200px;
+  
+  background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 1)), url(https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/_b0031903-a268-43fd-a82e-b717f15e1cf7.jpeg?v=1708641614866);
+  color: #007bff;
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: darken;
+
+}
+
+.cover3 {
+  height: 200px;
+  
+  background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 1)), url(https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/_60a88850-8ebb-48c6-9c84-0313ba29603c.jpeg?v=1708641592542);
+  color: #007bff;
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: darken;
+
+}
+
+.btn-group {
+
+  position: relative; /* Establece la posición relativa */
+  z-index: 1; /* Asegura que estén en el primer plano */
+}
+
+.btn-primary,
+.btn-light {
+  position: relative; /* Ajusta la posición según necesites */
+  z-index: 2; /* Coloca los botones sobre el fondo */
+}
+.custom-button {
+  font-size: 30px; /* Ajusta el tamaño del texto */
+  padding: 30px 100px; /* Ajusta el relleno para aumentar el tamaño del botón */
+  background-size: cover; /* Ajustar la imagen al tamaño del botón */
+  background-repeat: no-repeat; /* Evitar la repetición de la imagen */
+  background-position: center; 
+   text-align: center;/* Centrar la imagen en el botón */
+
+}
+
+
+/* Imagen para el botón 1 */
+.button1 {
+  
+    font-size: 15px;
+    padding: 80px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    cursor: pointer;
+    width: 100px;
+    height: 100px;
+    border-radius: 0%; /* Cambiado a 50% para hacer el botón completamente redondeado */
+    transition: transform 0.3s ease;
+    background-image: url("https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/chico-unscreen.gif?v=1709843532823");
+
+}
+
+.position-absolute {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+
+
+/* Imagen para el botón 2 */
+.button2 {
+  font-size: 15px;
+  padding: 80px; /* Ajusta el relleno para aumentar el tamaño del botón */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: flex; /* Usar flexbox */
+  align-items: flex-end; /* Alinear el texto en la parte inferior */
+  justify-content: center; /* Centrar el texto horizontalmente */
+  cursor: pointer;
+  width: 100px;
+  height: 100px;
+  border-radius: 0%;
+  transition: transform 0.3s ease;
+  background-image: url("https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/embarazada-unscreen.gif?v=1709843871746");
+}
+
+/* Imagen para el botón 3 */
+.button3 {
+  font-size: 15px;
+  padding: 80px; /* Ajusta el relleno para aumentar el tamaño del botón */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: flex; /* Usar flexbox */
+  align-items: flex-end; /* Alinear el texto en la parte inferior */
+  justify-content: center; /* Centrar el texto horizontalmente */
+  cursor: pointer;
+  width: 100px;
+  height: 100px;
+  border-radius: 0%;
+  transition: transform 0.3s ease;
+  background-image: url("https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/familia-unscreen.gif?v=1709843872821");
+}
+
+/* Imagen para el botón 4 */
+.button4 {
+  font-size: 15px;
+  padding: 80px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  cursor: pointer;
+  width: 100px;
+  height: 100px;
+  border-radius: 0%;
+  transition: transform 0.3s ease;
+  text-align: center;
+  background-image: url("https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/abuelos-unscreen.gif?v=1709843873617");
+}
+
+.button5
+{
+  display: none;
+  font-size: 10px;
+  padding: 80px; /* Ajusta el relleno para aumentar el tamaño del botón */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+
+align-items: flex-end;
+  justify-content: center; /* Centrar el texto horizontalmente */
+  cursor: pointer;
+  width: 100px;
+  height: 100px;
+  border-radius: 0%;
+  transition: transform 0.3s ease;
+    text-align: center;
+  background-image: url("https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/ambulancia-unscreen.gif?v=1709848946718");
+  }
+
+.button6
+{
+  display: none;
+  font-size: 10px;
+  padding: 80px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  align-items: flex-end;
+  
+  justify-content: center;
+  cursor: pointer;
+  width: 100px;
+  height: 100px;
+  border-radius: 0%;
+  transition: transform 0.3s ease;
+  text-align: center; /* Centrar el texto horizontalmente */
+  background-image: url("https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/negocio-unscreen.gif?v=1709849140788");
+  
+}
+
+.button1:hover {
+  /* Efecto de aumento al pasar el ratón sobre los botones */
+  transform: scale(1.1); /* Aumentar el tamaño del botón al 110% */
+}
+.button2:hover {
+  /* Efecto de aumento al pasar el ratón sobre los botones */
+  transform: scale(1.1); /* Aumentar el tamaño del botón al 110% */
+}
+.button3:hover {
+  /* Efecto de aumento al pasar el ratón sobre los botones */
+  transform: scale(1.1); /* Aumentar el tamaño del botón al 110% */
+}
+.button4:hover {
+  /* Efecto de aumento al pasar el ratón sobre los botones */
+  transform: scale(1.1); /* Aumentar el tamaño del botón al 110% */
+}
+.button5:hover {
+  /* Efecto de aumento al pasar el ratón sobre los botones */
+  transform: scale(1.1); /* Aumentar el tamaño del botón al 110% */
+}
+.button6:hover {
+  /* Efecto de aumento al pasar el ratón sobre los botones */
+  transform: scale(1.1); /* Aumentar el tamaño del botón al 110% */
+}
+
+#botones-personas1 {
+  display: flex; /* Mostrar los botones de personas */
+
+  
+}
+
+
+#botones-empresa {
+  display: none; /* Ocultar los botones de empresas inicialmente */
+
+}
+/* pago en linea*/
+.button-container {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente el contenido */
+  margin-top: 50px; /* Espacio superior para centrarlo verticalmente */
+}
+
+.button-with-image {
+  display: flex;
+  align-items: center;
+}
+
+.button-image {
+  width: 600px; /* Ancho deseado para la imagen */
+  height: 300px; /* Altura deseada para la imagen */
+  margin-right: 10px; /* Espacio entre la imagen y el botón */
+
+  border-radius: 15px; /* Redondea los bordes del botón */
+}
+
+.button7 {
+  /* Estilos personalizados para el botón */
+  padding: 10px 20px;
+  background-color: white; /* Color de fondo del botón */
+  color: black;
+  border: none; /* Sin borde */
+  border-radius: 15px; /* Redondea los bordes del botón */
+  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+}
+
+/* colocar color cuando pasa el mouse .button7:hover {
+  background-color: #0056b3; /* Cambia el color de fondo al pasar el cursor */
+
+.button8{
+  padding: 10px 40px;
+  border-radius: 35px;
+}
+
+.button9 {
+  /* Estilos personalizados para el botón */
+  padding: 10px 20px;
+  background-color: white; /* Color de fondo del botón */
+  color: #007bff;
+  border: none; /* Sin borde */
+  border-radius: 15px; /* Redondea los bordes del botón */
+  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+}
+/*---------ANIMACIÓN-------------------------------------------*/
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px); /* Desplazamiento inicial */
+    transition: opacity 0.5s ease, transform 0.5s ease; /* Animación de transición */
+}
+
+.fade-in.active {
+    opacity: 1;
+    transform: translateY(0); /* Sin desplazamiento */
+}
+
+/*--------------------------------------------------*/
+.cover-small {
+  height: 600px;
+  background-blend-mode: normal;
+}
+
+.coer-small {
+  height: 200px;
+  background-blend-mode: normal;
+}
+h1 {
+  font-size: 40px; /* Tamaño de fuente */
+
+  font-weight: bold; /* Negrita */
+
+}
+
+h6 {
+  font-size: 40px; /* Tamaño de fuente */
+
+  font-weight: bold; /* Negrita */
+  color: #007bff;
+}
+h7 {
+  font-size: 50px; /* Tamaño de fuente */
+
+  font-weight: bold; /* Negrita */
+  color: #007bff;
+  
+}
+h8 {
+  font-size: 80px; /* Tamaño de fuente */
+
+  color:white
+}
+h9 {
+  font-size: 40px; /* Tamaño de fuente */
+
+  font-weight: bold; /* Negrita */
+  color:white
+}
+h10 {
+  font-size: 30px; /* Tamaño de fuente */
+
+  font-weight: bold; /* Negrita */
+  color:#007bff
+}
+h11 {
+
+  font-weight: bold; /* Negrita */
+  color:#007bff
+}
+h12 {
+
+  font-weight: bold; /* Negrita */
+  color:white
+}
+.form-control {
+  border-color: #007bff !important;
+}
+.custom-border {
+  border-color: #007bff !important;
+}
+
+.cober {
+  height: 400px;
+  width: 550px;
+  background-image: url(https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/306273575_413961794167579_4820694486823397246_n.jpg?v=1708185287912);
+  color: white;
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  background-blend-mode: darken;
+}
+.fixed-top {
+  position: fixed;
+  width: 100%;
+  z-index: 1000; /* Z-index alto para que esté por encima de otros elementos */
+}
+.login-row {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 50px; /* Altura de la fila de inicio de sesión */
+  background-color: #007bff; /* Color de fondo */
+  z-index: 1000; /* Asegura que esta fila esté por encima de la barra de navegación */
+  transition: top 0.3s; /* Agrega una transición suave */
+}
+
+/* Estilo para la barra de navegación */
+.navbar {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Aumenta el tamaño y la opacidad de la sombra */
+  padding-top: 0px; /* Ajusta el relleno superior */
+  padding-bottom: 0px; /* Ajusta el relleno inferior */
+  position: fixed;
+  top: 50px; /* Ajusta la posición de la barra de navegación debajo de la fila de inicio de sesión */
+  width: 100%;
+
+  background-color: #f8f9fa; /* Color de fondo */
+  z-index: 900; /* Asegura que la barra de navegación esté por debajo de la fila de inicio de sesión */
+}
+.nav-link:hover,
+.nav-link:focus {
+  color: #ff0000; /* Cambia el color al acercarte o hacer foco en el enlace */
+}
+
+/* Clase para hacer que la barra de navegación se quede fija en la parte superior */
+.fixed-navbar {
+  top: 0 !important; /* Fija la barra de navegación en la parte superior */
+}
+
+/* Espacio para el contenido debajo de la barra de navegación */
+.content {
+  margin-top: 100px; /* Ajusta el espacio para que el contenido no esté oculto debajo de la barra de navegación */
+}
+.card {
+  border: 0 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+.card-title {
+  min-height: 3rem;
+}
+.card-text {
+  min-height: 10rem;
+  margin-bottom: 5px;
+}
+ul {
+  list-style-type: disc; /* Tipo de viñeta */
+  padding-left: 20px; /* Espacio a la izquierda para la viñeta */
+}
+
+.product-stripe {
+  overflow-x: scroll;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+.stripe-container,
+.slider-container {
+  display: flex;
+}
+.stripe-container .card {
+  width: 300px;
+  flex-shrink: 0;
+  margin-right: 1rem;
+}
+.responsive-iframe {
+  position: relative;
+  padding-top: 56.25%;
+}
+.responsive-iframe iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.slider {
+  overflow-x: hidden;
+}
+.slider-container {
+  transform: translateX(0);
+  animation: slider 10s infinite;
+}
+
+.image-container {
+  width: 100%;
+  padding-top: 56.25%;
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+}
+.avatar {
+  width: 120px;
+  height: 120px;
+  background-size: cover;
+  background-position: center;
+  margin: 0 auto;
+}
+
+.footer {
+    background-color: #343a40; /* Color de fondo */
+    color: #ffffff; /* Color del texto */
+  }
+
+  /* Estilo para los títulos de las columnas */
+  .footer h5 {
+    color: #ffffff; /* Color del texto */
+    font-size: 1.2rem; /* Tamaño de fuente */
+    margin-bottom: 1.5rem; /* Espaciado inferior */
+  }
+
+  /* Estilo para los enlaces en las columnas */
+  .footer a {
+    color: #ffffff; /* Color del texto */
+    text-decoration: none; /* Sin subrayado */
+    transition: color 0.3s; /* Transición suave de color */
+  }
+
+  /* Cambia el color de los enlaces al pasar el ratón sobre ellos */
+  .footer a:hover {
+    color: #cccccc; /* Color del texto al pasar el ratón */
+  }
+@keyframes slider {
+  0% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-100%);
+  }
+  45% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(-200%);
+  }
+  70% {
+    transform: translateX(-300%);
+  }
+
+  95% {
+    transform: translateX(-300%);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+/* desplegar*/
