@@ -77,8 +77,8 @@
 
              <a id="ambulanceLink" class="nav-link" href="/flota/historial_tanqueo/{{ambulancia.id}}" >Hist. De Tanqueo</a>
 
-            <a id="menuLink" class="nav-link" href="#">Hist. De Mantenimiento</a>
-            <a id="menuLink2" class="nav-link" href="#">Hist. Preoperacional</a>
+            <a id="menuLink" class="nav-link" href="/flota/historial_mantenimiento/{{ambulancia.id}}">Hist. De Mantenimiento</a>
+             
           </div>
           <!-- Sección para mostrar el nombre de usuario -->
           <div class="navbar-nav">
@@ -142,7 +142,7 @@
       data-bs-theme="light"
     >
       <div class="container mt-5">
-         <h2 class="text-center">Mantenimiento en Exterior de la Ambulancia</h2>
+         <h2 class="text-center">Mantenimiento en Exterior </h2>
     <!--<img src="https://cdn.glitch.global/dd67a867-ee25-4bee-981a-7488c739ae8d/mantenimiento.gif?v=1714331847849" alt="Descripción de la imagen" class="img-fluid mx-auto d-block mt-3" style="max-width: 10%;" />-->
         <form class="form-inline" id="formulario-mantenimiento" action="{% url 'G_carroceria' movil.id %}" method="post" enctype="multipart/form-data">
           {% csrf_token %}
