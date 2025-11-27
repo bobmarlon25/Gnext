@@ -16,6 +16,9 @@ class  Ambulancia(models.Model):
     ven_tecno=models.DateField(default=timezone.now)
     frontal = CloudinaryField('imagen')
     lateral = CloudinaryField('imagen')
+    class Meta:
+        verbose_name = "Vehículo"
+        verbose_name_plural = "Vehículos"
 
 
     def __str__(self):

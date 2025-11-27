@@ -359,19 +359,16 @@
          <!--   <a id="menuLink" class="nav-link" href="#">menu</a> -->
           </div>
           <!-- Sección para mostrar el nombre de usuario -->
-          <div class="navbar-nav">
-            <!-- Agrega un botón para cerrar sesión -->
-            <a class="nav-link" href="{% url 'logout' %}">Cerrar sesión</a>
+       <div class="navbar-nav">
+              <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="nav-link text-light border-0 bg-transparent p-0" style="cursor:pointer;">
+                  Cerrar sesión
+                </button>
+              </form>
           </div>
-
           <!-- Botón para cambiar la contraseña -->
-          <button
-            class="nav-link navbar-nav"
-            data-bs-toggle="modal"
-            data-bs-target="#crearMantenimientoModal"
-          >
-            Cambiar contraseña
-          </button>
+
         </div>
       </div>
     </nav>
