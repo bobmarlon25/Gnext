@@ -505,16 +505,16 @@
           });
         </script>
         
-        <div class="navbar-nav">
-          <a class="nav-link black-text" href="{% url 'logout' %}">Cerrar sesión</a>
-        </div>
-        <button
-          class="nav-link navbar-nav black-text"
-          data-bs-toggle="modal"
-          data-bs-target="#crearMantenimientoModal"
-        >
-          Cambiar contraseña
-        </button>
+<div class="navbar-nav">
+    <form action="{% url 'logout' %}" method="post" style="display:inline;">
+      {% csrf_token %}
+      <button type="submit" class="nav-link text-light border-0 bg-transparent p-0" style="cursor:pointer;">
+        Cerrar sesión
+      </button>
+    </form>
+</div>
+
+
       </div>
     </div>
   </nav>
@@ -632,7 +632,7 @@
         <div class="col-6 col-md-3 mb-3">
           <button class="btn btn-light btn-block fixed-size-btn">Transmisión</button>
         </div>
-        <div class="col-6 col-md-3 mb-3">
+        <!-- <div class="col-6 col-md-3 mb-3">
           <button class="btn btn-light btn-block fixed-size-btn">Combustible</button>
         </div>
         <div class="col-6 col-md-3 mb-3">
@@ -649,7 +649,7 @@
         </div>
         <div class="col-6 col-md-3 mb-3">
           <button class="btn btn-light btn-block fixed-size-btn">Interiores y Confort</button>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -905,7 +905,7 @@ updateSearchOnNewEntry();
                   <!-- Tercera imagen y párrafo -->
                   <div class="text-center fixed-column">
                     
-                    <p class="ambulancia-info m-0" style="position: relative; ">{{registro.fecha_registro}}</p>
+                    <p class="ambulancia-info m-0" style="position: relative;">{{registro.fecha_registro}}</p>
                   </div>
                   <!-- Cuarta imagen y párrafo -->
                   <div class="text-center fixed-column">
@@ -920,7 +920,6 @@ updateSearchOnNewEntry();
         </div>
       </div>
      {% endfor %}
-    
     
 
   
